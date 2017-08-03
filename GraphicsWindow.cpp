@@ -12,7 +12,7 @@ GraphicsWindow::GraphicsWindow() {
 	else
 	{
 		//Create window and renderer
-		if( SDL_CreateWindowAndRenderer( WINDOW_WIDTH, WINDOW_HEIGHT + 20, 0, &this->window, &this->renderer ) == -1 )
+		if( SDL_CreateWindowAndRenderer( WINDOW_WIDTH, WINDOW_HEIGHT, 0, &this->window, &this->renderer ) == -1 )
 		{
 			std::cout << "Window could not be created! SDL Error: " << SDL_GetError() << std::endl;
 		}
@@ -25,14 +25,6 @@ GraphicsWindow::GraphicsWindow() {
     else {
         this->sprite = new Sprite( this->renderer, "chess.png" );
     }
-
-    if ( TTF_Init() == -1 ) {
-        std::cout << "Could not initialize SDL_TTF: " << TTF_GetError() << std::endl;
-    }
-    else {
-
-        this->font = TTF_OpenFont("FreeSans.ttf", 12);
-    }
 }
 
 GraphicsWindow::~GraphicsWindow() {
@@ -43,12 +35,11 @@ GraphicsWindow::~GraphicsWindow() {
     SDL_Quit();
 }
 
-void GraphicsWindow::update( Board board, std::string command ) {
+void GraphicsWindow::update( Board board ) {
     std::cout << "update window" << std::endl;
     // Draw board
     this->drawBackground();
     this->drawBoard( board );
-    this->drawCommand( command );
     SDL_RenderPresent( this->renderer );
 }
 
@@ -112,26 +103,4 @@ void GraphicsWindow::drawBoard(Board board) {
             this->sprite->drawSprite( column, row, WINDOW_WIDTH/8, WINDOW_HEIGHT/8, _piece, _color );
         }
     }
-}
-
-void GraphicsWindow::drawCommand( std::string command ) {
-    int _y_offset = 4;
-    SDL_Rect _commandRect;
-    _commandRect.x = 0;
-    _commandRect.y = WINDOW_HEIGHT -_y_offset;
-    _commandRect.w = WINDOW_WIDTH;
-    _commandRect.h = COMMAND_HEIGHT;
-    SDL_SetRenderDrawColor( this->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-    SDL_RenderFillRect( this->renderer, &_commandRect );
-
-    SDL_Rect _textRect;
-    _textRect.x = 0;
-    _textRect.y = WINDOW_HEIGHT -_y_offset;
-    _textRect.w = WINDOW_WIDTH / 8;
-    _textRect.h = COMMAND_HEIGHT;
-    SDL_Color _black = {0, 0, 0};
-    SDL_Surface* _surfaceMessage = TTF_RenderText_Solid( this->font, command.c_str(), _black );
-    SDL_Texture* _message = SDL_CreateTextureFromSurface( this->renderer, _surfaceMessage );
-    SDL_RenderCopy( this->renderer, _message, NULL, &_textRect );
-
 }

@@ -13,8 +13,8 @@ int main( int argc, char* args[] )
 
     SDL_StartTextInput();
 
-    std::string command = "test";
-    window.update(board, command);
+    std::string command = "";
+    window.update( board );
     bool loop = true;
 	//While application is running
 	while ( loop ) {
@@ -41,7 +41,6 @@ int main( int argc, char* args[] )
                     std::cout << "backspace: " << command << std::endl;
                 }
             }
-            window.update(board, command);
 		}
 	}
 
