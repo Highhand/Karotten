@@ -11,6 +11,10 @@ int main( int argc, char* args[] )
 	//Event handler
 	SDL_Event event;
 
+    std::string test = "";
+    true ? test = "1" : test = "2";
+    std::cout << test << std::endl;
+
     SDL_StartTextInput();
 
     std::string command = "";
@@ -32,6 +36,11 @@ int main( int argc, char* args[] )
             else if ( event.type == SDL_KEYUP ) {
                 if ( event.key.keysym.sym == SDLK_RETURN ) {
                     std::cout << "enter: " << command << std::endl;
+                    // TODO: Debugging
+                    board.registerMove ( command );
+                    board.makeMove();
+                    window.update( board );
+
                     command = "";
                 }
                 else if ( event.key.keysym.sym == SDLK_BACKSPACE ) {
