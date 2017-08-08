@@ -22,8 +22,8 @@ void Board::makeMove() {
     std::vector< std::string > _moves;
     for ( int r = 0; r < BOARD_HEIGHT; r++ ) {
         for ( int c = 0; c < BOARD_WIDTH; c++ ) {
-            if ( this->currentBoard[r][c] == 1 || this->currentBoard[r][c] == -1 ) {
-                _moves = generatePawnMoves( c, r );
+            if ( this->currentBoard[r][c] == 2 || this->currentBoard[r][c] == -2 ) {
+                _moves = generateKnightMoves( c, r );
                 std::cout << positionToString( c, r ) << ": ";
                 for (int i = 0; i < _moves.size(); i++ ) {
                     std::cout << _moves.at(i) << ", ";
@@ -96,77 +96,27 @@ std::vector< std::string > Board::generateKnightMoves( int column, int row ) {
     std::vector< std::string > _moves;
     bool _isWhite = this->currentBoard[row][column] > 0;
     std::string _move = this->positionToString( column, row );
-    int _nextColumn, _nextRow;
-    // row -2
-    _nextRow = row-2;
-    if ( this->isValidRow( _nextRow ) ) {
-        // column -1
-        _nextColumn = column-1;
-        if ( this->isValidColumn( _nextColumn ) &&
-             ( this->isFree( _nextColumn, _nextRow ) || this->isCapture( _nextColumn, _nextRow, _isWhite ) ) )
-        {
-            _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        }
-        // column +1
-        _nextColumn = column+1;
-        if ( this->isValidColumn( _nextColumn ) &&
-             ( this->isFree( _nextColumn, _nextRow ) || this->isCapture( _nextColumn, _nextRow, _isWhite ) ) )
-        {
-            _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        }
-    }
-    // row -1
-    _nextRow = row-1;
-    if ( this->isValidRow( _nextRow ) ) {
-        // column -2
-        _nextColumn = column-2;
-        if ( this->isValidColumn( _nextColumn ) &&
-             ( this->isFree( _nextColumn, _nextRow ) || this->isCapture( _nextColumn, _nextRow, _isWhite ) ) )
-        {
-            _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        }
-        // column +2
-        _nextColumn = column+2;
-        if ( this->isValidColumn( _nextColumn ) &&
-             ( this->isFree( _nextColumn, _nextRow ) || this->isCapture( _nextColumn, _nextRow, _isWhite ) ) )
-        {
-            _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        }
-    }
-    // row +1
-    _nextRow = row+1;
-    if ( this->isValidRow( _nextRow ) ) {
-        // column -2
-        _nextColumn = column-2;
-        if ( this->isValidColumn( _nextColumn ) &&
-             ( this->isFree( _nextColumn, _nextRow ) || this->isCapture( _nextColumn, _nextRow, _isWhite ) ) )
-        {
-            _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        }
-        // column +2
-        _nextColumn = column+2;
-        if ( this->isValidColumn( _nextColumn ) &&
-             ( this->isFree( _nextColumn, _nextRow ) || this->isCapture( _nextColumn, _nextRow, _isWhite ) ) )
-        {
-            _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        }
-    }
-    // row +2
-    _nextRow = row+2;
-    if ( this->isValidRow( _nextRow ) ) {
-        // column -1
-        _nextColumn = column-1;
-        if ( this->isValidColumn( _nextColumn ) &&
-             ( this->isFree( _nextColumn, _nextRow ) || this->isCapture( _nextColumn, _nextRow, _isWhite ) ) )
-        {
-            _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        }
-        // column +1
-        _nextColumn = column+1;
-        if ( this->isValidColumn( _nextColumn ) &&
-             ( this->isFree( _nextColumn, _nextRow ) || this->isCapture( _nextColumn, _nextRow, _isWhite ) ) )
-        {
-            _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
+    int _nextColumn, _nextRow, _columnStep;
+
+    for ( int _rowStep = -2; _rowStep <= 2; _rowStep++ ) {
+        if (_rowStep == 0) continue;
+        _nextRow = row +_rowStep;
+        if ( this->isValidRow( _nextRow ) ) {
+            // left
+            _columnStep  = 3 -abs(_rowStep);
+            _nextColumn = column -_columnStep;
+            if ( this->isValidColumn( _nextColumn ) &&
+                 ( this->isFree( _nextColumn, _nextRow ) || this->isCapture( _nextColumn, _nextRow, _isWhite ) ) )
+            {
+                _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
+            }
+            // right
+            _nextColumn = column +_columnStep;
+            if ( this->isValidColumn( _nextColumn ) &&
+                 ( this->isFree( _nextColumn, _nextRow ) || this->isCapture( _nextColumn, _nextRow, _isWhite ) ) )
+            {
+                _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
+            }
         }
     }
     return _moves;
