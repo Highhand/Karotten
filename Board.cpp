@@ -22,8 +22,8 @@ void Board::makeMove() {
     std::vector< std::string > _moves;
     for ( int r = 0; r < BOARD_HEIGHT; r++ ) {
         for ( int c = 0; c < BOARD_WIDTH; c++ ) {
-            if ( this->currentBoard[r][c] == 5 ) {
-                _moves = generateQueenMoves( c, r );
+            if ( this->currentBoard[r][c] == 1 || this->currentBoard[r][c] == -1 ) {
+                _moves = generatePawnMoves( c, r );
                 std::cout << positionToString( c, r ) << ": ";
                 for (int i = 0; i < _moves.size(); i++ ) {
                     std::cout << _moves.at(i) << ", ";
@@ -56,49 +56,36 @@ std::vector< std::string > Board::generatePawnMoves( int column, int row ) {
     std::vector< std::string > _moves;
     std::string _move = this->positionToString( column, row );
     bool _isWhite = this->currentBoard[row][column] > 0;
+    int _nextColumn, _nextRow;
     // If white then first move when pawn at row #2
     // If black then first move when pawn at row #7
     bool _isFirstMove = _isWhite ? row == 1 : row == 6;
-    // Check one infront
-    if ( _isWhite ) {
-        // std::cout << "white pawn " << std::endl;
-        // Check if free
-        // std::cout << "checking r,c: " << row+1 << ", " << column << std::endl;
-        if ( this->isFree( column, row+1 ) ) {
-            std::cout << "free " << std::endl;
-            _moves.push_back( _move + this->positionToString( column, row+1 ) );
-            // If first movement possible to move 2 steps
-            if ( _isFirstMove &&  this->isFree( column, row+2 ) ) {
-                _moves.push_back( _move + this->positionToString( column, row+2 ) );
-            }
-        }
-        // Check capture left
-        if ( this->isValidColumn(column-1) && this->isCapture( column-1, row+1 , _isWhite ) ) {
+    // If white inc (+), if black move dec (-)
+    int _forwardStep = _isWhite ? 1 : -1;
+    // Check capture left
+    _nextRow = row + _forwardStep;
+    if ( this->isValidRow(_nextRow) ) {
+        _nextColumn = column -1;
+        if ( this->isValidColumn(_nextColumn) && this->isCapture( _nextColumn, _nextRow , _isWhite ) ) {
             // std::cout << "cap left " << std::endl;
-            _moves.push_back( _move + this->positionToString( column-1, row+1 ) );
+            _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
         }
         // Check capture right
-        if ( this->isValidColumn(column+1) && this->isCapture( column+1, row+1, _isWhite ) ) {
+        _nextColumn = column +1;
+        if ( this->isValidColumn(_nextColumn) && this->isCapture( _nextColumn, _nextRow, _isWhite ) ) {
             // std::cout << "cap right " << std::endl;
-            _moves.push_back( _move + this->positionToString( column+1, row+1 ) );
+            _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
         }
-    }
-    else {
         // Check if free
-        if ( this->isFree( column, row-1 ) ) {
-            _moves.push_back( _move + this->positionToString( column, row-1 ) );
+        _nextColumn = column;
+        if ( this->isFree( _nextColumn, _nextRow ) ) {
+            // std::cout << "free " << std::endl;
+            _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
             // If first movement possible to move 2 steps
-            if ( _isFirstMove && this->isFree( column, row-2 ) ) {
-                _moves.push_back( _move + this->positionToString( column, row-2 ) );
+            _nextRow += _forwardStep;
+            if ( _isFirstMove && isValidRow(_nextRow) && this->isFree( _nextColumn, _nextRow ) ) {
+                _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
             }
-        }
-        // Check capture left
-        if ( this->isValidColumn(column-1) && this->isCapture( column-1, row-1, _isWhite ) ) {
-            _moves.push_back( _move + this->positionToString( column-1, row-1 ) );
-        }
-        // Check capture right
-        if ( this->isValidColumn(column+1) && this->isCapture( column+1, row-1, _isWhite ) ) {
-            _moves.push_back( _move + this->positionToString( column+1, row-1 ) );
         }
     }
     // TODO: Check promotion
