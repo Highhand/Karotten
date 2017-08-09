@@ -22,9 +22,9 @@ void Board::makeMove() {
     std::vector< std::string > _moves;
     for ( int r = 0; r < BOARD_HEIGHT; r++ ) {
         for ( int c = 0; c < BOARD_WIDTH; c++ ) {
-            if ( this->currentBoard[r][c] == 3 || this->currentBoard[r][c] == -3 ) {
+            if ( this->currentBoard[r][c] == 4 || this->currentBoard[r][c] == -4 ) {
                 std::cout << "found bish" << std::endl;
-                _moves = generateBishopMoves( c, r );
+                _moves = generateRookMoves( c, r );
                 std::cout << positionToString( c, r ) << ": ";
                 for (int i = 0; i < _moves.size(); i++ ) {
                     std::cout << _moves.at(i) << ", ";
@@ -129,12 +129,12 @@ std::vector< std::string > Board::generateBishopMoves( int column, int row ) {
     std::string _move = this->positionToString( column, row );
     int _nextColumn, _nextRow;
 
-    for ( int _rowDir = -1; _rowDir <= 1; _rowDir += 2 ) {
-        // std::cout << "rdir: " << _rowDir << std::endl;
-        for ( int _columnDir = -1; _columnDir <= 1; _columnDir += 2 ) {
-            // std::cout << "cdir: " << _columnDir << std::endl;
-            _nextColumn = column + _columnDir;
-            _nextRow = row + _rowDir;
+    for ( int _rowStep = -1; _rowStep <= 1; _rowStep += 2 ) {
+        // std::cout << "rdir: " << _rowStep << std::endl;
+        for ( int _columnStep = -1; _columnStep <= 1; _columnStep += 2 ) {
+            // std::cout << "cdir: " << _columnStep << std::endl;
+            _nextColumn = column + _columnStep;
+            _nextRow = row + _rowStep;
             while ( isValidColumn(_nextColumn) && isValidRow(_nextRow) ) {
                 // std::cout << "checking" << std::endl;
                 // Occupied
@@ -146,8 +146,8 @@ std::vector< std::string > Board::generateBishopMoves( int column, int row ) {
                     break;
                 }
                 _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-                _nextColumn += _columnDir;
-                _nextRow += _rowDir;
+                _nextColumn += _columnStep;
+                _nextRow += _rowStep;
             }
         }
     }
@@ -159,65 +159,40 @@ std::vector< std::string > Board::generateRookMoves( int column, int row ) {
     bool _isWhite = this->currentBoard[row][column] > 0;
     std::string _move = this->positionToString( column, row );
     int _nextColumn, _nextRow;
-    // up r--
-    _nextColumn = column;
-    _nextRow = row -1;
-    while ( isValidRow(_nextRow) ) {
-        // Occupied
-        if ( !isFree(_nextColumn, _nextRow) ) {
-            // If occupied by enemy
-            if ( isCapture(_nextColumn, _nextRow, _isWhite) ) {
-                _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
+
+    // Up and down
+    for (int _rowStep = -1; _rowStep <= 1; _rowStep += 2 ) {
+        _nextColumn = column;
+        _nextRow = row +_rowStep;
+        while ( isValidRow(_nextRow) ) {
+            // Occupied
+            if ( !isFree(_nextColumn, _nextRow) ) {
+                // If occupied by enemy
+                if ( isCapture(_nextColumn, _nextRow, _isWhite) ) {
+                    _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
+                }
+                break;
             }
-            break;
+            _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
+            _nextRow += _rowStep;
         }
-        _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        _nextRow--;
     }
-    // right c++
-    _nextColumn = column +1;
-    _nextRow = row ;
-    while ( isValidColumn(_nextColumn) ) {
-        // Occupied
-        if ( !isFree(_nextColumn, _nextRow) ) {
-            // If occupied by enemy
-            if ( isCapture(_nextColumn, _nextRow, _isWhite) ) {
-                _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
+    // Left and right
+    for (int _columnStep = -1; _columnStep <= 1; _columnStep += 2 ) {
+        _nextColumn = column +_columnStep;
+        _nextRow = row ;
+        while ( isValidColumn(_nextColumn) ) {
+            // Occupied
+            if ( !isFree(_nextColumn, _nextRow) ) {
+                // If occupied by enemy
+                if ( isCapture(_nextColumn, _nextRow, _isWhite) ) {
+                    _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
+                }
+                break;
             }
-            break;
+            _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
+            _nextColumn += _columnStep;
         }
-        _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        _nextColumn++;
-    }
-    // down r++
-    _nextColumn = column;
-    _nextRow = row +1;
-    while ( isValidRow(_nextRow) ) {
-        // Occupied
-        if ( !isFree(_nextColumn, _nextRow) ) {
-            // If occupied by enemy
-            if ( isCapture(_nextColumn, _nextRow, _isWhite) ) {
-                _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-            }
-            break;
-        }
-        _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        _nextRow++;
-    }
-    // left c--
-    _nextColumn = column -1;
-    _nextRow = row ;
-    while ( isValidColumn(_nextColumn) ) {
-        // Occupied
-        if ( !isFree(_nextColumn, _nextRow) ) {
-            // If occupied by enemy
-            if ( isCapture(_nextColumn, _nextRow, _isWhite) ) {
-                _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-            }
-            break;
-        }
-        _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        _nextColumn--;
     }
     return _moves;
 }
