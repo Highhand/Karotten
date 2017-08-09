@@ -22,8 +22,9 @@ void Board::makeMove() {
     std::vector< std::string > _moves;
     for ( int r = 0; r < BOARD_HEIGHT; r++ ) {
         for ( int c = 0; c < BOARD_WIDTH; c++ ) {
-            if ( this->currentBoard[r][c] == 2 || this->currentBoard[r][c] == -2 ) {
-                _moves = generateKnightMoves( c, r );
+            if ( this->currentBoard[r][c] == 3 || this->currentBoard[r][c] == -3 ) {
+                std::cout << "found bish" << std::endl;
+                _moves = generateBishopMoves( c, r );
                 std::cout << positionToString( c, r ) << ": ";
                 for (int i = 0; i < _moves.size(); i++ ) {
                     std::cout << _moves.at(i) << ", ";
@@ -127,69 +128,28 @@ std::vector< std::string > Board::generateBishopMoves( int column, int row ) {
     bool _isWhite = this->currentBoard[row][column] > 0;
     std::string _move = this->positionToString( column, row );
     int _nextColumn, _nextRow;
-    // right up c++ r--
-    _nextColumn = column +1;
-    _nextRow = row -1;
-    while ( isValidColumn(_nextColumn) && isValidRow(_nextRow) ) {
-        // Occupied
-        if ( !isFree(_nextColumn, _nextRow) ) {
-            // If occupied by enemy
-            if ( isCapture(_nextColumn, _nextRow, _isWhite) ) {
+
+    for ( int _rowDir = -1; _rowDir <= 1; _rowDir += 2 ) {
+        // std::cout << "rdir: " << _rowDir << std::endl;
+        for ( int _columnDir = -1; _columnDir <= 1; _columnDir += 2 ) {
+            // std::cout << "cdir: " << _columnDir << std::endl;
+            _nextColumn = column + _columnDir;
+            _nextRow = row + _rowDir;
+            while ( isValidColumn(_nextColumn) && isValidRow(_nextRow) ) {
+                // std::cout << "checking" << std::endl;
+                // Occupied
+                if ( !isFree(_nextColumn, _nextRow) ) {
+                    // If occupied by enemy
+                    if ( isCapture(_nextColumn, _nextRow, _isWhite) ) {
+                        _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
+                    }
+                    break;
+                }
                 _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
+                _nextColumn += _columnDir;
+                _nextRow += _rowDir;
             }
-            break;
         }
-        _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        _nextColumn++;
-        _nextRow--;
-    }
-    // right down c++ r++
-    _nextColumn = column +1;
-    _nextRow = row +1;
-    while ( isValidColumn(_nextColumn) && isValidRow(_nextRow) ) {
-        // Occupied
-        if ( !isFree(_nextColumn, _nextRow) ) {
-            // If occupied by enemy
-            if ( isCapture(_nextColumn, _nextRow, _isWhite) ) {
-                _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-            }
-            break;
-        }
-        _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        _nextColumn++;
-        _nextRow++;
-    }
-    // left down c-- r++
-    _nextColumn = column -1;
-    _nextRow = row +1;
-    while ( isValidColumn(_nextColumn) && isValidRow(_nextRow) ) {
-        // Occupied
-        if ( !isFree(_nextColumn, _nextRow) ) {
-            // If occupied by enemy
-            if ( isCapture(_nextColumn, _nextRow, _isWhite) ) {
-                _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-            }
-            break;
-        }
-        _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        _nextColumn--;
-        _nextRow++;
-    }
-    // left up c-- r--
-    _nextColumn = column -1;
-    _nextRow = row -1;
-    while ( isValidColumn(_nextColumn) && isValidRow(_nextRow) ) {
-        // Occupied
-        if ( !isFree(_nextColumn, _nextRow) ) {
-            // If occupied by enemy
-            if ( isCapture(_nextColumn, _nextRow, _isWhite) ) {
-                _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-            }
-            break;
-        }
-        _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
-        _nextColumn--;
-        _nextRow--;
     }
     return _moves;
 }
