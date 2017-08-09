@@ -22,9 +22,8 @@ void Board::makeMove() {
     std::vector< std::string > _moves;
     for ( int r = 0; r < BOARD_HEIGHT; r++ ) {
         for ( int c = 0; c < BOARD_WIDTH; c++ ) {
-            if ( this->currentBoard[r][c] == 4 || this->currentBoard[r][c] == -4 ) {
-                std::cout << "found bish" << std::endl;
-                _moves = generateRookMoves( c, r );
+            if ( this->currentBoard[r][c] == 6 || this->currentBoard[r][c] == -6 ) {
+                _moves = generateKingMoves( c, r );
                 std::cout << positionToString( c, r ) << ": ";
                 for (int i = 0; i < _moves.size(); i++ ) {
                     std::cout << _moves.at(i) << ", ";
@@ -68,23 +67,20 @@ std::vector< std::string > Board::generatePawnMoves( int column, int row ) {
     if ( this->isValidRow(_nextRow) ) {
         _nextColumn = column -1;
         if ( this->isValidColumn(_nextColumn) && this->isCapture( _nextColumn, _nextRow , _isWhite ) ) {
-            // std::cout << "cap left " << std::endl;
             _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
         }
         // Check capture right
         _nextColumn = column +1;
         if ( this->isValidColumn(_nextColumn) && this->isCapture( _nextColumn, _nextRow, _isWhite ) ) {
-            // std::cout << "cap right " << std::endl;
             _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
         }
         // Check if free
         _nextColumn = column;
         if ( this->isFree( _nextColumn, _nextRow ) ) {
-            // std::cout << "free " << std::endl;
             _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
             // If first movement possible to move 2 steps
             _nextRow += _forwardStep;
-            if ( _isFirstMove && isValidRow(_nextRow) && this->isFree( _nextColumn, _nextRow ) ) {
+            if ( _isFirstMove && this->isValidRow(_nextRow) && this->isFree( _nextColumn, _nextRow ) ) {
                 _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
             }
         }
@@ -130,17 +126,14 @@ std::vector< std::string > Board::generateBishopMoves( int column, int row ) {
     int _nextColumn, _nextRow;
 
     for ( int _rowStep = -1; _rowStep <= 1; _rowStep += 2 ) {
-        // std::cout << "rdir: " << _rowStep << std::endl;
         for ( int _columnStep = -1; _columnStep <= 1; _columnStep += 2 ) {
-            // std::cout << "cdir: " << _columnStep << std::endl;
             _nextColumn = column + _columnStep;
             _nextRow = row + _rowStep;
-            while ( isValidColumn(_nextColumn) && isValidRow(_nextRow) ) {
-                // std::cout << "checking" << std::endl;
+            while ( this->isValidColumn(_nextColumn) && this->isValidRow(_nextRow) ) {
                 // Occupied
-                if ( !isFree(_nextColumn, _nextRow) ) {
+                if ( !this->isFree(_nextColumn, _nextRow) ) {
                     // If occupied by enemy
-                    if ( isCapture(_nextColumn, _nextRow, _isWhite) ) {
+                    if ( this->isCapture(_nextColumn, _nextRow, _isWhite) ) {
                         _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
                     }
                     break;
@@ -164,11 +157,11 @@ std::vector< std::string > Board::generateRookMoves( int column, int row ) {
     for (int _rowStep = -1; _rowStep <= 1; _rowStep += 2 ) {
         _nextColumn = column;
         _nextRow = row +_rowStep;
-        while ( isValidRow(_nextRow) ) {
+        while ( this->isValidRow(_nextRow) ) {
             // Occupied
-            if ( !isFree(_nextColumn, _nextRow) ) {
+            if ( !this->isFree(_nextColumn, _nextRow) ) {
                 // If occupied by enemy
-                if ( isCapture(_nextColumn, _nextRow, _isWhite) ) {
+                if ( this->isCapture(_nextColumn, _nextRow, _isWhite) ) {
                     _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
                 }
                 break;
@@ -181,11 +174,11 @@ std::vector< std::string > Board::generateRookMoves( int column, int row ) {
     for (int _columnStep = -1; _columnStep <= 1; _columnStep += 2 ) {
         _nextColumn = column +_columnStep;
         _nextRow = row ;
-        while ( isValidColumn(_nextColumn) ) {
+        while ( this->isValidColumn(_nextColumn) ) {
             // Occupied
-            if ( !isFree(_nextColumn, _nextRow) ) {
+            if ( !this->isFree(_nextColumn, _nextRow) ) {
                 // If occupied by enemy
-                if ( isCapture(_nextColumn, _nextRow, _isWhite) ) {
+                if ( this->isCapture(_nextColumn, _nextRow, _isWhite) ) {
                     _moves.push_back( _move + this->positionToString( _nextColumn, _nextRow ) );
                 }
                 break;
@@ -209,30 +202,21 @@ std::vector< std::string > Board::generateQueenMoves( int column, int row ) {
 std::vector< std::string > Board::generateKingMoves( int column, int row ) {
     std::vector< std::string > _moves;
     bool _isWhite = this->currentBoard[row][column] > 0;
-    // std::cout << "Currpos r,c:" << row << ", " << column << std::endl;
+    std::string move = this->positionToString( column, row );
     // Check the 8 squares around King
-    for ( int r = row-1; r <= row+1; r++ ) {
+    for ( int _nextRow = row-1; _nextRow <= row+1; _nextRow++ ) {
         // Skip out of bounds row
-        if ( r < 0 || r >= BOARD_HEIGHT ) continue;
-        for ( int c = column-1; c <= column+1; c++ ) {
-            // Skip out of bounds column
-            if ( c < 0 || c >= BOARD_WIDTH || (r == row && c == column) ) continue;
-            std::string move = this->positionToString( column, row );
-            char _nextPos = this->currentBoard[r][c];
+        if ( !this->isValidRow(_nextRow) ) continue;
+        for ( int _nextColumn = column-1; _nextColumn <= column+1; _nextColumn++ ) {
+            // Skip out of bounds column and current pos
+            if ( !this->isValidColumn(_nextColumn) || (_nextRow == row && _nextColumn == column) ) continue;
             // Free
-            if ( _nextPos == 0 ) {
-                _moves.push_back( move + this->positionToString( c, r ) );
-                // std::cout << "Found free: " << move << " at r: " << r << ", c: " << c << std::endl;
+            if ( this->isFree( _nextColumn, _nextRow ) ) {
+                _moves.push_back( move + this->positionToString( _nextColumn, _nextRow ) );
             }
             // Capture for white
-            else if ( _nextPos < 0 && _isWhite ) {
-                _moves.push_back( move + this->positionToString( c, r ) );
-                // std::cout << "Found white cap: " << move << " at c: " << r << ", r: " << c << std::endl;
-            }
-            // Capture for black
-            else if ( _nextPos > 0 && !_isWhite ) {
-                _moves.push_back( move + this->positionToString( c, r ) );
-                // std::cout << "Found black cap: " << move << " at c: " << r << ", r: " << c << std::endl;
+            else if ( this->isCapture( _nextColumn, _nextRow, _isWhite ) ) {
+                _moves.push_back( move + this->positionToString( _nextColumn, _nextRow ) );
             }
         }
     }
