@@ -51,56 +51,56 @@ void GraphicsWindow::drawBackground() {
         for ( int column = 0; column < 8; column++ ) {
             // If not even draw rect
             if ( (column + row) % 2 != 0 ) {
-                SDL_Rect _square;
-                _square.x = column*(WINDOW_WIDTH/8);
-                _square.y = row*(WINDOW_HEIGHT/8);
-                _square.w = (WINDOW_WIDTH/8);
-                _square.h = (WINDOW_HEIGHT/8);
-                SDL_RenderFillRect( this->renderer, &_square );
+                SDL_Rect square;
+                square.x = column*(WINDOW_WIDTH/8);
+                square.y = row*(WINDOW_HEIGHT/8);
+                square.w = (WINDOW_WIDTH/8);
+                square.h = (WINDOW_HEIGHT/8);
+                SDL_RenderFillRect( this->renderer, &square );
             }
         }
     }
 }
 
 void GraphicsWindow::drawBoard(Board board) {
-    auto _currBoard = board.getCurrentBoard();
-    for ( int row = 0; row < _currBoard.size() ; row++ ) {
-        for ( int column = 0; column < _currBoard[row].size() ; column++ ) {
-            char _currPos = _currBoard[row][column];
+    auto currBoard = board.getCurrentBoard();
+    for ( int row = 0; row < currBoard.size() ; row++ ) {
+        for ( int column = 0; column < currBoard[row].size() ; column++ ) {
+            char currPos = currBoard[row][column];
 
             // Empty position
-            if ( _currPos == 0 ) continue;
+            if ( currPos == 0 ) continue;
 
-            Color _color;
-            Piece _piece;
-            _currPos < 0 ? _color = Color::Black : _color = Color::White;
+            Color color;
+            Piece piece;
+            currPos < 0 ? color = Color::Black : color = Color::White;
 
-            switch ( abs(_currPos) ) {
+            switch ( abs(currPos) ) {
                 case 1:
-                    _piece = Piece::Pawn;
+                    piece = Piece::Pawn;
                     break;
                 case 2:
-                    _piece = Piece::Knight;
+                    piece = Piece::Knight;
                     break;
                 case 3:
-                    _piece = Piece::Bishop;
+                    piece = Piece::Bishop;
                     break;
                 case 4:
-                    _piece = Piece::Rook;
+                    piece = Piece::Rook;
                     break;
                 case 5:
-                    _piece = Piece::Queen;
+                    piece = Piece::Queen;
                     break;
                 case 6:
-                    _piece = Piece::King;
+                    piece = Piece::King;
                     break;
                 default:
-                    _piece = Piece::Pawn;
+                    piece = Piece::Pawn;
                     break;
             }
 
             // Draw piece on current position
-            this->sprite->drawSprite( column, row, WINDOW_WIDTH/8, WINDOW_HEIGHT/8, _piece, _color );
+            this->sprite->drawSprite( column, row, WINDOW_WIDTH/8, WINDOW_HEIGHT/8, piece, color );
         }
     }
 }

@@ -23,51 +23,51 @@ Sprite::~Sprite() {
 }
 
 void Sprite::drawSprite( int column, int row, int width, int height, Piece piece, Color color ) {
-    SDL_Rect _srcRect;
+    SDL_Rect srcRect;
 
     switch ( piece ) {
         case Piece::Knight:
-            _srcRect.x = (this->width)/6*0;
+            srcRect.x = (this->width)/6*0;
             break;
         case Piece::Pawn:
-            _srcRect.x = (this->width)/6*1;
+            srcRect.x = (this->width)/6*1;
             break;
         case Piece::Rook:
-            _srcRect.x = (this->width)/6*2;
+            srcRect.x = (this->width)/6*2;
             break;
         case Piece::Bishop:
-            _srcRect.x = (this->width)/6*3;
+            srcRect.x = (this->width)/6*3;
             break;
         case Piece::King:
-            _srcRect.x = (this->width)/6*4;
+            srcRect.x = (this->width)/6*4;
             break;
         case Piece::Queen:
-            _srcRect.x = (this->width)/6*5;
+            srcRect.x = (this->width)/6*5;
             break;
         default:
-            _srcRect.x = 0;
+            srcRect.x = 0;
             break;
     }
 
     switch ( color ) {
         case Color::White:
-            _srcRect.y = (this->height)/2*0;
+            srcRect.y = (this->height)/2*0;
             break;
         case Color::Black:
-            _srcRect.y = (this->height)/2*1;
+            srcRect.y = (this->height)/2*1;
             break;
         default:
-            _srcRect.y = 0;
+            srcRect.y = 0;
             break;
     }
 
-    _srcRect.w = (this->width)/6;
-    _srcRect.h = (this->height)/2;
+    srcRect.w = (this->width)/6;
+    srcRect.h = (this->height)/2;
 
-    SDL_Rect _destRect;
-    _destRect.x = column*width;
-    _destRect.y = row*height;
-    _destRect.w = width;
-    _destRect.h = height;
-    SDL_RenderCopy( this->renderer, this->texture, &_srcRect, &_destRect );
+    SDL_Rect destRect;
+    destRect.x = column*width;
+    destRect.y = row*height;
+    destRect.w = width;
+    destRect.h = height;
+    SDL_RenderCopy( this->renderer, this->texture, &srcRect, &destRect );
 }

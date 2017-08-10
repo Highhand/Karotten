@@ -24,32 +24,41 @@ public:
     void registerMove( std::string move );
 private:
 
+
+    /*
+     * kingIsSafe(), check if provided move places own king in check
+     */
+    bool kingIsSafe( std::string move );
     /*
      * generatePawnMoves()
      */
-    std::vector< std::string > generatePawnMoves( int column, int row );
+    std::vector< std::string > generatePawnMoves( int column, int row, bool onlyCaptures );
     /*
      * generateKnightMoves()
      */
-    std::vector< std::string > generateKnightMoves( int column, int row );
+    std::vector< std::string > generateKnightMoves( int column, int row, bool onlyCaptures );
     /*
      * generateBishopMoves()
      */
-    std::vector< std::string > generateBishopMoves( int column, int row );
+    std::vector< std::string > generateBishopMoves( int column, int row, bool onlyCaptures );
     /*
      * generateRookMoves()
      */
-    std::vector< std::string > generateRookMoves( int column, int row );
+    std::vector< std::string > generateRookMoves( int column, int row, bool onlyCaptures );
     /*
      * generateQueenMoves()
      */
-    std::vector< std::string > generateQueenMoves( int column, int row );
+    std::vector< std::string > generateQueenMoves( int column, int row, bool onlyCaptures );
     /*
      * generateKingMoves()
      */
-    std::vector< std::string > generateKingMoves( int column, int row );
+    std::vector< std::string > generateKingMoves( int column, int row, bool onlyCaptures );
 
     /* Helper functions */
+    /*
+     * getPieceAt(), Returns value at pos provided as arg
+     */
+    char getPieceAt( std::string );
     /*
      * Converts a position to a string in UCI-format i.e. (3,3) -> "d4"
      */
@@ -59,10 +68,12 @@ private:
      * Converts a character a-h to corresponding number i.e. b -> 1
      */
     int columnToInt( char );
+    int rowToInt( char );
 
-    bool isValidRow( int r );
+    bool isValidColumn( int );
+    bool isValidRow( int );
 
-    bool isValidColumn( int c );
+    bool isValidPos( int column, int row );
 
     bool isCapture( int column, int row, bool isWhite );
 
