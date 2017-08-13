@@ -14,10 +14,10 @@ public:
     GraphicsWindow();
     ~GraphicsWindow();
 
-    void update( Board board );
+    void update( Board& board );
 private:
     void drawBackground();
-    void drawBoard( Board board);
+    void drawBoard( Board& board);
 
     SDL_Window* window;
     SDL_Renderer* renderer;

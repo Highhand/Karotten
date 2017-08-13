@@ -15,50 +15,23 @@ public:
 
     std::array< std::array< char, BOARD_WIDTH >, BOARD_HEIGHT > getCurrentBoard();
     /*
-     * makeMove() Generetas possible moves and executes one
+     * makeMove() Updates current board based on input and returns captured piece
      */
-    void makeMove();
+    char makeMove( std::string move );
     /*
-     * registerMove() Updates current board based on input
+     * undoMove() Updates current board based on input
      */
-    void registerMove( std::string move );
-private:
-
-
-    /*
-     * kingIsSafe(), check if provided move places own king in check
-     */
-    bool kingIsSafe( std::string move );
-    /*
-     * generatePawnMoves()
-     */
-    std::vector< std::string > generatePawnMoves( int column, int row, bool onlyCaptures );
-    /*
-     * generateKnightMoves()
-     */
-    std::vector< std::string > generateKnightMoves( int column, int row, bool onlyCaptures );
-    /*
-     * generateBishopMoves()
-     */
-    std::vector< std::string > generateBishopMoves( int column, int row, bool onlyCaptures );
-    /*
-     * generateRookMoves()
-     */
-    std::vector< std::string > generateRookMoves( int column, int row, bool onlyCaptures );
-    /*
-     * generateQueenMoves()
-     */
-    std::vector< std::string > generateQueenMoves( int column, int row, bool onlyCaptures );
-    /*
-     * generateKingMoves()
-     */
-    std::vector< std::string > generateKingMoves( int column, int row, bool onlyCaptures );
-
-    /* Helper functions */
+    void undoMove( std::string move, char capturedPiece );
     /*
      * getPieceAt(), Returns value at pos provided as arg
      */
     char getPieceAt( std::string );
+    char getPieceAt( int column, int row );
+    /*
+     * setPieceAt(), Writes value to pos provided as arg
+     */
+    void setPieceAt( std::string, char piece );
+    void setPieceAt( int column, int row, char piece );
     /*
      * Converts a position to a string in UCI-format i.e. (3,3) -> "d4"
      */
@@ -74,11 +47,10 @@ private:
     bool isValidRow( int );
 
     bool isValidPos( int column, int row );
-
     bool isCapture( int column, int row, bool isWhite );
-
     bool isFree( int column, int row );
     /* --- */
+private:
 
     std::array< std::array< char, BOARD_WIDTH >, BOARD_HEIGHT > currentBoard;
 };

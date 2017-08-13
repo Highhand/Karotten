@@ -35,7 +35,7 @@ GraphicsWindow::~GraphicsWindow() {
     SDL_Quit();
 }
 
-void GraphicsWindow::update( Board board ) {
+void GraphicsWindow::update( Board& board ) {
     std::cout << "update window" << std::endl;
     // Draw board
     this->drawBackground();
@@ -62,7 +62,7 @@ void GraphicsWindow::drawBackground() {
     }
 }
 
-void GraphicsWindow::drawBoard(Board board) {
+void GraphicsWindow::drawBoard(Board& board) {
     auto currBoard = board.getCurrentBoard();
     for ( int row = 0; row < currBoard.size() ; row++ ) {
         for ( int column = 0; column < currBoard[row].size() ; column++ ) {
