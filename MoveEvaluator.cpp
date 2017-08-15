@@ -12,13 +12,7 @@ MoveEvaluator::~MoveEvaluator() {
 }
 
 std::pair< std::string, int > MoveEvaluator::alphaBeta( int depth, int alpha, int beta, bool maximizingPlayer, Board& board) {
-
-    // std::cout << std::endl
-    //           << "depth: " << depth
-    //           << ", alpha: " << alpha
-    //           << ", beta: " << beta
-    //           << ", maxPlyer: " << maximizingPlayer << std::endl;
-
+    // Base case
     if ( depth == 0 ) {
         return std::make_pair(board.getLastMove(), this->evaluateBoard(board) );
     }
@@ -33,24 +27,13 @@ std::pair< std::string, int > MoveEvaluator::alphaBeta( int depth, int alpha, in
         for ( int i = 0; i < numOfChildren; i++ ) {
             // TODO: Make move
             // Call alphaBeta with new child-boardstate
-
-            std::cout << "Calling maxfor at depth: " << depth << ", child nr: " << i << std::endl;
-
             std::pair< std::string, int > newMove = this->alphaBeta(depth-1, alpha, beta, false, board);
-
-            std::cout << "Returning maxfor at depth: " << depth << ", child nr: " << i << ", with score: "
-                      << newMove.second << std::endl;
-
             // TODO: Undo move to return to parent-boardstate
             // If new move is better (higher score) then previously best move update best move
             if ( bestMove.second < newMove.second ) {
                 bestMove = newMove;
-                std::cout << "New max bestmove" << std::endl;
             }
-            // Set new lower bound
-            if ( alpha < bestMove.second ) {
-                std::cout << "New alpha: " << bestMove.second << std::endl;
-            }
+            // Update lower bound
             alpha = std::max(alpha, bestMove.second);
             // Moves FROM this boardstate will only result in a value greater than alpha and the previous
             // boardstate have moves that will result in a value less than beta. Therefore if
@@ -65,24 +48,13 @@ std::pair< std::string, int > MoveEvaluator::alphaBeta( int depth, int alpha, in
         for ( int i = 0; i < numOfChildren; i++ ) {
             // TODO: Make move
             // Call alphaBeta with new child-boardstate
-
-            std::cout << "Calling minfor at depth: " << depth << ", child nr: " << i << std::endl;
-
             std::pair< std::string, int > newMove = this->alphaBeta(depth-1, alpha, beta, true, board);
-
-            std::cout << "Returning minfor at depth: " << depth << ", child nr: " << i << ", with score: "
-                      << newMove.second << std::endl;
-
             // TODO: Undo move to return to parent-boardstate
             // If new move is better (lower score) then previously best move update best move
             if ( bestMove.second > newMove.second ) {
                 bestMove = newMove;
-                std::cout << "New min bestmove" << std::endl;
             }
-            // Set new upper bound
-            if ( beta > bestMove.second ) {
-                std::cout << "New beta: " << bestMove.second << std::endl;
-            }
+            // Update upper bound
             beta = std::min(beta, bestMove.second);
             // Moves FROM this boardstate will only result in a value less than beta and the previous
             // boardstate have moves that will result in a value greater than alpha. Therefore if
