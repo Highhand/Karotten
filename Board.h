@@ -14,6 +14,7 @@ public:
     ~Board();
 
     std::array< std::array< char, BOARD_WIDTH >, BOARD_HEIGHT > getCurrentBoard();
+    std::string getLastMove();
     /*
      * makeMove() Updates current board based on input and returns captured piece
      */
@@ -51,8 +52,8 @@ public:
     bool isFree( int column, int row );
     /* --- */
 private:
-
     std::array< std::array< char, BOARD_WIDTH >, BOARD_HEIGHT > currentBoard;
+    std::string lastMove;
 };
 
 #endif

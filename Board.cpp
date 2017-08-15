@@ -10,6 +10,8 @@ Board::Board() {
     this->currentBoard[5] = { 0, 0, 0, 0, 0, 0, 0, 0 };
     this->currentBoard[6] = { -1, -1, -1, -1, -1, -1, -1, -1 };
     this->currentBoard[7] = { -4, -2, -3, -5, -6, -3, -2, -4 };
+
+    this->lastMove = "";
     std::cout << "Created Board" << std::endl;
 }
 
@@ -19,6 +21,10 @@ Board::~Board() {
 
 std::array< std::array< char, BOARD_WIDTH >, BOARD_HEIGHT > Board::getCurrentBoard() {
     return this->currentBoard;
+}
+
+std::string Board::getLastMove() {
+    return this->lastMove;
 }
 
 char Board::makeMove( std::string move ) {
@@ -40,6 +46,7 @@ char Board::makeMove( std::string move ) {
         capturedPiece = this->getPieceAt(columnTo, rowTo);
         this->setPieceAt(columnTo, rowTo, this->getPieceAt(columnFrom, rowFrom));
         this->setPieceAt(columnFrom, rowFrom, 0);
+        this->lastMove = move;
     }
     return capturedPiece;
 }

@@ -1,5 +1,7 @@
 #include "MoveEvaluator.h"
+#include <algorithm> // min, max
 #include <iostream>
+#include <limits> // <int> max, <int> min
 
 MoveEvaluator::MoveEvaluator() {
     std::cout << "Created MoveEvaluator" << std::endl;
@@ -7,6 +9,96 @@ MoveEvaluator::MoveEvaluator() {
 
 MoveEvaluator::~MoveEvaluator() {
     std::cout << "Destroyed MoveEvaluator" << std::endl;
+}
+
+std::pair< std::string, int > MoveEvaluator::alphaBeta( int depth, int alpha, int beta, bool maximizingPlayer, Board& board) {
+
+    // std::cout << std::endl
+    //           << "depth: " << depth
+    //           << ", alpha: " << alpha
+    //           << ", beta: " << beta
+    //           << ", maxPlyer: " << maximizingPlayer << std::endl;
+
+    if ( depth == 0 ) {
+        return std::make_pair(board.getLastMove(), this->evaluateBoard(board) );
+    }
+    std::pair<std::string, int> bestMove;
+    int numOfChildren;
+    std::cout << "Number of children: ";
+    std::cin >> numOfChildren;
+    // TODO: Generate moves
+    if ( maximizingPlayer ) {
+        bestMove.first = "";
+        bestMove.second = std::numeric_limits<int>::min();
+        for ( int i = 0; i < numOfChildren; i++ ) {
+            // TODO: Make move
+            // Call alphaBeta with new child-boardstate
+
+            std::cout << "Calling maxfor at depth: " << depth << ", child nr: " << i << std::endl;
+
+            std::pair< std::string, int > newMove = this->alphaBeta(depth-1, alpha, beta, false, board);
+
+            std::cout << "Returning maxfor at depth: " << depth << ", child nr: " << i << ", with score: "
+                      << newMove.second << std::endl;
+
+            // TODO: Undo move to return to parent-boardstate
+            // If new move is better (higher score) then previously best move update best move
+            if ( bestMove.second < newMove.second ) {
+                bestMove = newMove;
+                std::cout << "New max bestmove" << std::endl;
+            }
+            // Set new lower bound
+            if ( alpha < bestMove.second ) {
+                std::cout << "New alpha: " << bestMove.second << std::endl;
+            }
+            alpha = std::max(alpha, bestMove.second);
+            // Moves FROM this boardstate will only result in a value greater than alpha and the previous
+            // boardstate have moves that will result in a value less than beta. Therefore if
+            // alpha is greater than beta this boardstate will not be chosen and we can ignore its
+            // remaining children.
+            if ( beta <= alpha ) break;
+        }
+        return bestMove;
+    } else {
+        bestMove.first = "";
+        bestMove.second = std::numeric_limits<int>::max();
+        for ( int i = 0; i < numOfChildren; i++ ) {
+            // TODO: Make move
+            // Call alphaBeta with new child-boardstate
+
+            std::cout << "Calling minfor at depth: " << depth << ", child nr: " << i << std::endl;
+
+            std::pair< std::string, int > newMove = this->alphaBeta(depth-1, alpha, beta, true, board);
+
+            std::cout << "Returning minfor at depth: " << depth << ", child nr: " << i << ", with score: "
+                      << newMove.second << std::endl;
+
+            // TODO: Undo move to return to parent-boardstate
+            // If new move is better (lower score) then previously best move update best move
+            if ( bestMove.second > newMove.second ) {
+                bestMove = newMove;
+                std::cout << "New min bestmove" << std::endl;
+            }
+            // Set new upper bound
+            if ( beta > bestMove.second ) {
+                std::cout << "New beta: " << bestMove.second << std::endl;
+            }
+            beta = std::min(beta, bestMove.second);
+            // Moves FROM this boardstate will only result in a value less than beta and the previous
+            // boardstate have moves that will result in a value greater than alpha. Therefore if
+            // beta is less than alpha this boardstate will not be chosen and we can ignore its
+            // remaining children.
+            if ( beta <= alpha ) break;
+        }
+        return bestMove;
+    }
+}
+
+int MoveEvaluator::evaluateBoard( Board& board ) {
+    int score;
+    std::cout << "Node score: ";
+    std::cin >> score;
+    return score;
 }
 
 bool MoveEvaluator::kingIsSafe( Board& board, MoveGenerator& moveGen, std::string move ) {
