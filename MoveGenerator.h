@@ -9,7 +9,8 @@ public:
     ~MoveGenerator();
 
     /*
-     * generateMoves()
+     * generateMoves(). Generate all possible pseudo-legal moves for provided color.
+     * (Pseudo-legal as in moves that can place your own king in check and are therefore not legal)
      */
     std::vector< std::string > generateMoves( Board& board, bool white );
     /*
@@ -36,9 +37,7 @@ public:
      * generateKingMoves()
      */
     std::vector< std::string > generateKingMoves( Board& board, int column, int row, bool onlyCaptures );
-
 private:
-
 };
 
 #endif

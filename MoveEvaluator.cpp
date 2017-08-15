@@ -67,91 +67,74 @@ std::pair< std::string, int > MoveEvaluator::alphaBeta( int depth, int alpha, in
 }
 
 int MoveEvaluator::evaluateBoard( Board& board ) {
-    int score;
-    std::cout << "Node score: ";
-    std::cin >> score;
+    int score = 0;
+    // for ( int row = 0; row < )
     return score;
 }
 
 bool MoveEvaluator::kingIsSafe( Board& board, MoveGenerator& moveGen, std::string move ) {
     std::vector< std::string > moves;
-    std::string from = move.substr(0,2);
-    std::string to = move.substr(2,2);
-    bool isWhite = board.getPieceAt(from) > 0;
+    bool isWhite = board.getPieceAt(move.substr(0,2)) > 0;
     int colorModifier = isWhite ? 1 : -1;
     int kingColumn, kingRow;
-    int oldPiece = board.getPieceAt(to);
-    int columnTo = board.columnToInt(to.at(0));
-    int rowTo = board.rowToInt(to.at(1));
     // make move
-    board.makeMove( move );
-    // gen all diff moves for King
-    for ( int row = 0; row < BOARD_HEIGHT; row++ ) {
-        for ( int column = 0; column < BOARD_WIDTH; column++ ) {
+    int oldPiece = board.makeMove( move );
+    // Find the Kings position
+    for ( int row = 0; row < Board::HEIGHT; row++ ) {
+        for ( int column = 0; column < Board::WIDTH; column++ ) {
             if ( board.getPieceAt(column, row) == 6*colorModifier ) {
                 kingColumn = column;
                 kingRow = row;
             }
         }
     }
-    // knight
+    // Generate Knight moves
     moves = moveGen.generateKnightMoves( board, kingColumn, kingRow, true);
     for ( int i = 0; i < moves.size(); i++ ) {
-        // Check if opposing colors piece
+        // Check if opponents Knight can be captured from Kings position
         if (board.getPieceAt(moves[i].substr(2,2)) == 2*colorModifier*-1 ) {
-            board.makeMove( to + from );
-            board.setPieceAt(columnTo, rowTo, oldPiece);
-            // std::cout << "King threatend by piece at: " << moves.at(i).substr(2,2) << std::endl;
+            board.undoMove( move, oldPiece );
             return false;
         }
     }
-    // Rook or Queen
+    // Generate Rook moves
     moves = moveGen.generateRookMoves( board, kingColumn, kingRow, true);
     for ( int i = 0; i < moves.size(); i++ ) {
-        // Check if opposing colors piece
+        // Check if opponents Rook or Queen can be captured from Kings position
         int piece =board.getPieceAt(moves[i].substr(2,2));
         if ( piece == 4*colorModifier*-1 || piece == 5*colorModifier*-1 ) {
-            board.makeMove( to + from );
-            board.setPieceAt(columnTo, rowTo, oldPiece);
-            // std::cout << "King threatend by piece at: " << moves.at(i).substr(2,2) << std::endl;
+            board.undoMove( move, oldPiece );
             return false;
         }
     }
-    // Bishop or Queen
+    // Generate Bishop moves
     moves = moveGen.generateBishopMoves( board, kingColumn, kingRow, true);
     for ( int i = 0; i < moves.size(); i++ ) {
-        // Check if opposing colors piece
-        int piece =board.getPieceAt(moves[i].substr(2,2));
+        // Check if opponents Bishop or Queen can be captured from Kings position
+        int piece = board.getPieceAt(moves[i].substr(2,2));
         if ( piece == 3*colorModifier*-1 || piece == 5*colorModifier*-1 ) {
-            board.makeMove( to + from );
-            board.setPieceAt(columnTo, rowTo, oldPiece);
-            // std::cout << "King threatend by piece at: " << moves.at(i).substr(2,2) << std::endl;
+            board.undoMove( move, oldPiece );
             return false;
         }
     }
-    // Pawn
+    // Generate Pawn moves
     moves = moveGen.generatePawnMoves( board, kingColumn, kingRow, true);
     for ( int i = 0; i < moves.size(); i++ ) {
-        // Check if opposing colors pawn
+        // Check if opponents Pawn can be captured from Kings position
         if (board.getPieceAt(moves[i].substr(2,2)) == 1*colorModifier*-1 ) {
-            board.makeMove( to + from );
-            board.setPieceAt(columnTo, rowTo, oldPiece);
-            // std::cout << "King threatend by piece at: " << moves.at(i).substr(2,2) << std::endl;
+            board.undoMove( move, oldPiece );
             return false;
         }
     }
-    // King
+    // Generate King moves
     moves = moveGen.generateKingMoves( board, kingColumn, kingRow, true);
     for ( int i = 0; i < moves.size(); i++ ) {
-        // Check if opposing colors piece
+        // Check if opponents King can be captured from Kings position
         if (board.getPieceAt(moves[i].substr(2,2)) == 6*colorModifier*-1 ) {
-            board.makeMove( to + from );
-            board.setPieceAt(columnTo, rowTo, oldPiece);
-            // std::cout << "King threatend by piece at: " << moves.at(i).substr(2,2) << std::endl;
+            board.undoMove( move, oldPiece );
             return false;
         }
     }
-    board.makeMove( to + from );
-    board.setPieceAt(columnTo, rowTo, oldPiece);
+    board.undoMove( move, oldPiece );
     return true;
 }

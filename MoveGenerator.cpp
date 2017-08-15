@@ -11,8 +11,8 @@ MoveGenerator::~MoveGenerator() {
 
 std::vector< std::string > MoveGenerator::generateMoves( Board& board, bool white ) {
     std::vector< std::string > moves;
-    for ( int row = 0; row < BOARD_HEIGHT; row++ ) {
-        for ( int column = 0; column < BOARD_WIDTH; column++ ) {
+    for ( int row = 0; row < Board::HEIGHT; row++ ) {
+        for ( int column = 0; column < Board::WIDTH; column++ ) {
             char piece = board.getPieceAt(column, row);
             // Skip empty spots and if white skip black and if black skip white pieces
             if ( piece == 0 || (white && piece < 0) || (!white && piece > 0) ) continue;
