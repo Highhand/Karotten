@@ -2,8 +2,10 @@
 #include <algorithm> // min, max
 #include <iostream>
 #include <limits> // <int> max, <int> min
+#include <vector>
 
 MoveEvaluator::MoveEvaluator() {
+    this->moveGen = MoveGenerator();
     std::cout << "Created MoveEvaluator" << std::endl;
 }
 
@@ -11,27 +13,36 @@ MoveEvaluator::~MoveEvaluator() {
     std::cout << "Destroyed MoveEvaluator" << std::endl;
 }
 
-std::pair< std::string, int > MoveEvaluator::alphaBeta( int depth, int alpha, int beta, bool maximizingPlayer, Board& board) {
+std::pair< std::string, int > MoveEvaluator::alphaBeta(int depth, int alpha, int beta, bool maximizingPlayer, Board& board) {
     // Base case
     if ( depth == 0 ) {
         return std::make_pair(board.getLastMove(), this->evaluateBoard(board) );
     }
+    // Generate moves
+    std::vector< std::string > moves = moveGen.generateMoves(board, maximizingPlayer);
+    // TODO: Sort moves
+    // Remove moves that places own king in check
+    for ( int i = 0; i < moves.size(); i++ ) {
+        if ( !this->kingIsSafe(board, this->moveGen, moves.at(i)) ) {
+            moves.erase(moves.begin()+i);
+            i--;
+        }
+    }
     std::pair<std::string, int> bestMove;
-    int numOfChildren;
-    std::cout << "Number of children: ";
-    std::cin >> numOfChildren;
-    // TODO: Generate moves
     if ( maximizingPlayer ) {
         bestMove.first = "";
         bestMove.second = std::numeric_limits<int>::min();
-        for ( int i = 0; i < numOfChildren; i++ ) {
-            // TODO: Make move
+        for ( int i = 0; i < moves.size(); i++ ) {
+            // Make move
+            int capturedPiece = board.makeMove(moves.at(i));
             // Call alphaBeta with new child-boardstate
             std::pair< std::string, int > newMove = this->alphaBeta(depth-1, alpha, beta, false, board);
-            // TODO: Undo move to return to parent-boardstate
-            // If new move is better (higher score) then previously best move update best move
+            // Undo move to return to parent-boardstate
+            board.undoMove(moves.at(i), capturedPiece);
+            // If new move is better (higher score) then previously best moves score update best move
             if ( bestMove.second < newMove.second ) {
-                bestMove = newMove;
+                bestMove.first = moves.at(i); // New optimal move
+                bestMove.second = newMove.second; // New score for move
             }
             // Update lower bound
             alpha = std::max(alpha, bestMove.second);
@@ -45,14 +56,17 @@ std::pair< std::string, int > MoveEvaluator::alphaBeta( int depth, int alpha, in
     } else {
         bestMove.first = "";
         bestMove.second = std::numeric_limits<int>::max();
-        for ( int i = 0; i < numOfChildren; i++ ) {
-            // TODO: Make move
+        for ( int i = 0; i < moves.size(); i++ ) {
+            // Make move
+            int capturedPiece = board.makeMove(moves.at(i));
             // Call alphaBeta with new child-boardstate
             std::pair< std::string, int > newMove = this->alphaBeta(depth-1, alpha, beta, true, board);
-            // TODO: Undo move to return to parent-boardstate
+            // Undo move to return to parent-boardstate
+            board.undoMove(moves.at(i), capturedPiece);
             // If new move is better (lower score) then previously best move update best move
             if ( bestMove.second > newMove.second ) {
-                bestMove = newMove;
+                bestMove.first = moves.at(i); // New optimal move
+                bestMove.second = newMove.second; // New score for move
             }
             // Update upper bound
             beta = std::min(beta, bestMove.second);
@@ -68,7 +82,11 @@ std::pair< std::string, int > MoveEvaluator::alphaBeta( int depth, int alpha, in
 
 int MoveEvaluator::evaluateBoard( Board& board ) {
     int score = 0;
-    // for ( int row = 0; row < )
+    for ( int row = 0; row < Board::HEIGHT; row++ ) {
+        for ( int column = 0; column < Board::WIDTH; column++ ) {
+            score += board.getPieceAt(column, row);
+        }
+    }
     return score;
 }
 

@@ -48,7 +48,6 @@ public:
     bool isCapture( int column, int row, bool isWhite );
     bool isFree( int column, int row );
 private:
-    // enum { WIDTH = 8, HEIGHT = 8 };
     std::array< std::array< char, WIDTH >, HEIGHT > currentBoard;
     // Hold the last valid move sent to makeMove(). undoMove() does not affect this var.
     std::string lastMove;

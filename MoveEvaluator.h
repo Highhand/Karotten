@@ -34,6 +34,7 @@ public:
      */
     bool kingIsSafe( Board& board, MoveGenerator& moveGen, std::string move );
 private:
+    MoveGenerator moveGen;
 };
 
 #endif

@@ -29,6 +29,7 @@ int main( int argc, char* args[] )
     Board board = Board();
     MoveGenerator moveGen = MoveGenerator();
     MoveEvaluator moveEval = MoveEvaluator();
+    bool whiteTurn = true;
 
     // std::pair<std::string, int> pr = moveEval.alphaBeta(4, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), true, board);
     // std::cout << "Score:" << pr.second << std::endl;
@@ -56,6 +57,18 @@ int main( int argc, char* args[] )
             }
             else if ( event.type == SDL_KEYUP ) {
                 if ( event.key.keysym.sym == SDLK_RETURN ) {
+                    std::pair< std::string, int > bestMove;
+                    if (whiteTurn) {
+                        bestMove = moveEval.alphaBeta(4, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), true, board);
+                        std::cout << "Best move for white: ";
+                        std::cout << bestMove.first << ", with score: " << bestMove.second << std::endl;
+                    }
+                    else {
+                        bestMove = moveEval.alphaBeta(4, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), false, board);
+                        std::cout << "Best move for black: ";
+                        std::cout << bestMove.first << ", with score: " << bestMove.second << std::endl;
+                    }
+                    command = bestMove.first;
                     std::cout << "enter: " << command << std::endl;
                     // TODO: Debugging
                     if (!command.empty() && command.at(0) == 'z') {
@@ -64,12 +77,8 @@ int main( int argc, char* args[] )
                     } else {
                         std::cout << "Making: " << command << std::endl;
                         lastCaptPiece = board.makeMove ( command );
+                        whiteTurn = !whiteTurn; // Change turn
                     }
-                    // board.makeMove();
-                    std::cout << "White moves: " << std::endl;
-                    printMoves(moveGen.generateMoves(board, true), board, moveGen, moveEval);
-                    std::cout << "Black moves: " << std::endl;
-                    printMoves(moveGen.generateMoves(board, false), board, moveGen, moveEval);
                     window.update( board );
 
                     command = "";
