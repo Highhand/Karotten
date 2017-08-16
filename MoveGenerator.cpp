@@ -85,6 +85,7 @@ std::vector< std::string > MoveGenerator::generatePawnMoves( Board& board, int c
         }
     }
     // TODO: Check promotion
+    // TODO: En passant
     return moves;
 }
 

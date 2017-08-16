@@ -14,6 +14,7 @@ public:
     GraphicsWindow();
     ~GraphicsWindow();
 
+    void loop();
     void update( Board& board );
 private:
     void drawBackground();
