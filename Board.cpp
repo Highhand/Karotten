@@ -2,21 +2,12 @@
 #include <iostream>
 
 Board::Board() {
-    this->currentBoard[0] = { 4, 2, 3, 5, 6, 3, 2, 4 };
-    this->currentBoard[1] = { 1, 1, 1, 1, 1, 1, 1, 1 };
-    this->currentBoard[2] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    this->currentBoard[3] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    this->currentBoard[4] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    this->currentBoard[5] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    this->currentBoard[6] = { -1, -1, -1, -1, -1, -1, -1, -1 };
-    this->currentBoard[7] = { -4, -2, -3, -5, -6, -3, -2, -4 };
-
-    this->lastMove = "";
-    std::cout << "Created Board" << std::endl;
+    this->resetBoard();
+    // std::cout << "Created Board" << std::endl;
 }
 
 Board::~Board() {
-    std::cout << "Destroyed Board" << std::endl;
+    // std::cout << "Destroyed Board" << std::endl;
 }
 
 std::array< std::array< char, Board::WIDTH >, Board::HEIGHT > Board::getCurrentBoard() {
@@ -105,6 +96,30 @@ void Board::undoMove( std::string move, char capturedPiece ) {
         this->setPieceAt(columnTo, rowTo, this->getPieceAt(columnFrom, rowFrom));
         this->setPieceAt(columnFrom, rowFrom, capturedPiece);
     }
+}
+
+void Board::printBoard() {
+    for ( int row = 0; row < Board::HEIGHT; row++ ) {
+        for ( int column = 0; column < Board::WIDTH; column++ ) {
+            int piece = (int)this->getPieceAt(column ,row);
+            std::string tmp = piece < 0 ? "|" : "| ";
+            std::cout << tmp << (int)this->getPieceAt(column ,row) << " ";
+        }
+        std::cout << "|" << std::endl;
+    }
+}
+
+void Board::resetBoard() {
+    this->currentBoard[0] = { 4, 2, 3, 5, 6, 3, 2, 4 };
+    this->currentBoard[1] = { 1, 1, 1, 1, 1, 1, 1, 1 };
+    this->currentBoard[2] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    this->currentBoard[3] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    this->currentBoard[4] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    this->currentBoard[5] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    this->currentBoard[6] = { -1, -1, -1, -1, -1, -1, -1, -1 };
+    this->currentBoard[7] = { -4, -2, -3, -5, -6, -3, -2, -4 };
+
+    this->lastMove = "";
 }
 
 std::string Board::positionToString( int column, int row ) {

@@ -2,11 +2,11 @@
 #include <iostream>
 
 MoveGenerator::MoveGenerator() {
-    std::cout << "Created MoveGenerator" << std::endl;
+    // std::cout << "Created MoveGenerator" << std::endl;
 }
 
 MoveGenerator::~MoveGenerator() {
-    std::cout << "Destroyed MoveGenerator" << std::endl;
+    // std::cout << "Destroyed MoveGenerator" << std::endl;
 }
 
 std::vector< std::string > MoveGenerator::generateMoves( Board& board, bool white ) {

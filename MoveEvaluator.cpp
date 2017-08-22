@@ -5,12 +5,15 @@
 #include <vector>
 
 MoveEvaluator::MoveEvaluator() {
-    this->moveGen = MoveGenerator();
-    std::cout << "Created MoveEvaluator" << std::endl;
+    // std::cout << "Created MoveEvaluator" << std::endl;
 }
 
 MoveEvaluator::~MoveEvaluator() {
-    std::cout << "Destroyed MoveEvaluator" << std::endl;
+    // std::cout << "Destroyed MoveEvaluator" << std::endl;
+}
+
+std::pair< std::string, int > MoveEvaluator::findBestMove( Board& board, bool whiteTurn ) {
+    return this->alphaBeta(4, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), whiteTurn, board);
 }
 
 std::pair< std::string, int > MoveEvaluator::alphaBeta(int depth, int alpha, int beta, bool maximizingPlayer, Board& board) {

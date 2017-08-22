@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = main.cpp Board.cpp GraphicsWindow.cpp MoveEvaluator.cpp MoveGenerator.cpp Sprite.cpp
+OBJS = main.cpp Board.cpp CommunicatorUCI.cpp GraphicsWindow.cpp MoveEvaluator.cpp MoveGenerator.cpp Sprite.cpp
 #CC specifies which compiler we're using
 CC = g++
 #COMPILER_FLAGS specifies the additional compilation options we're using # -w suppresses all warnings

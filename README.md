@@ -10,6 +10,7 @@
 
 
 Engine
- - Board
- - MoveGenerator
- - MoveEvaluator
+- CommunicatorUCI
+    - Board
+    - MoveEvaluator
+        - MoveGenerator

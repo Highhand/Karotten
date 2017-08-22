@@ -10,6 +10,8 @@ public:
     MoveEvaluator();
     ~MoveEvaluator();
 
+
+    std::pair< std::string, int > findBestMove( Board& board, bool whiteTurn );
     /*
      * alphaBeta(). Returns a pair where first item is the optimal move and the second item
      * is its score. The algorithm is a version of the minimax-algorithm where branches that leads to

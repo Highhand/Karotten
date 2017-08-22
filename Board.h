@@ -34,6 +34,14 @@ public:
      */
     void undoMove( std::string move, char capturedPiece );
     /*
+     * resetBoard() Resets current board
+     */
+    void printBoard();
+    /*
+     * resetBoard() Resets current board
+     */
+    void resetBoard();
+    /*
      * Converts a position to a string in UCI-format i.e. (3,3) -> "d4"
      */
     std::string positionToString(int column, int row );
