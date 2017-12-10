@@ -2,7 +2,7 @@
 #include <iostream>
 
 Board::Board() {
-    this->resetBoard();
+    ResetBoard();
     // std::cout << "Created Board" << std::endl;
 }
 
@@ -10,119 +10,119 @@ Board::~Board() {
     // std::cout << "Destroyed Board" << std::endl;
 }
 
-std::array< std::array< char, Board::WIDTH >, Board::HEIGHT > Board::getCurrentBoard() {
-    return this->currentBoard;
+std::array< std::array< char, Board::WIDTH >, Board::HEIGHT > Board::GetCurrentBoard() {
+    return current_board;
 }
 
-char Board::getPieceAt( std::string pos ) {
+char Board::GetPieceAt( std::string pos ) {
     // A position must be of length 2
     if ( pos.size() != 2 ) return 0;
 
     int column, row;
-    column = this->columnToInt( pos.at(0) );
-    row = this->rowToInt( pos.at(1) );
+    column = ColumnToInt( pos.at(0) );
+    row = RowToInt( pos.at(1) );
     // If invalid postion return 0
-    if ( !isValidPos( column, row ) ) return 0;
-    return this->currentBoard[row][column];
+    if ( !IsValidPos( column, row ) ) return 0;
+    return current_board[row][column];
 }
 
-char Board::getPieceAt( int column, int row ) {
-    if ( !isValidPos( column, row ) ) return 0;
-    return this->currentBoard[row][column];
+char Board::GetPieceAt( int column, int row ) {
+    if ( !IsValidPos( column, row ) ) return 0;
+    return current_board[row][column];
 }
 
-void Board::setPieceAt( std::string pos, char piece ) {
+void Board::SetPieceAt( std::string pos, char piece ) {
     // A position must be of length 2
     if ( pos.size() != 2 ) return;
     int column, row;
-    column = this->columnToInt( pos.at(0) );
-    row = this->rowToInt( pos.at(1) );
+    column = ColumnToInt( pos.at(0) );
+    row = RowToInt( pos.at(1) );
     // Return if invalid position
-    if ( !isValidPos( column, row ) ) return;
+    if ( !IsValidPos( column, row ) ) return;
     // Check if valid piece
     if ( piece >= -6 && piece <= 6 ) {
-        this->currentBoard[row][column] = piece;
+        current_board[row][column] = piece;
     }
     else {
-        this->currentBoard[row][column] = 0;
+        current_board[row][column] = 0;
     }
 }
 
-void Board::setPieceAt( int column, int row, char piece ) {
+void Board::SetPieceAt( int column, int row, char piece ) {
     // Return if invalid position
-    if ( !isValidPos( column, row ) ) return;
+    if ( !IsValidPos( column, row ) ) return;
     if ( piece >= -6 && piece <= 6 ) {
-        this->currentBoard[row][column] = piece;
+        current_board[row][column] = piece;
     }
     else {
-        this->currentBoard[row][column] = 0;
+        current_board[row][column] = 0;
     }
 }
 
-std::string Board::getLastMove() {
-    return this->lastMove;
+std::string Board::GetLastMove() {
+    return last_move;
 }
 
-char Board::makeMove( std::string move ) {
+char Board::MakeMove( std::string move ) {
     if ( move.size() != 4 ) return 0;
-    int columnFrom, rowFrom, columnTo, rowTo;
-    char capturedPiece = 0;
-    columnFrom = this->columnToInt( move.at(0) );
-    rowFrom = this->rowToInt( move.at(1) );
-    columnTo = this->columnToInt( move.at(2) );
-    rowTo = this->rowToInt( move.at(3) );
+    int column_from, row_from, column_to, row_to;
+    char captured_piece = 0;
+    column_from = ColumnToInt( move.at(0) );
+    row_from = RowToInt( move.at(1) );
+    column_to = ColumnToInt( move.at(2) );
+    row_to = RowToInt( move.at(3) );
     // Update board and check if valid pos to avoid segmentation error
-    if ( this->isValidPos(columnFrom, rowFrom) && this->isValidPos(columnTo, rowTo) &&
-         !this->isFree(columnFrom, rowFrom) )
+    if ( IsValidPos(column_from, row_from) && IsValidPos(column_to, row_to) &&
+         !IsFree(column_from, row_from) )
     {
-        capturedPiece = this->getPieceAt(columnTo, rowTo);
-        this->setPieceAt(columnTo, rowTo, this->getPieceAt(columnFrom, rowFrom));
-        this->setPieceAt(columnFrom, rowFrom, 0);
-        this->lastMove = move;
+        captured_piece = GetPieceAt(column_to, row_to);
+        SetPieceAt(column_to, row_to, GetPieceAt(column_from, row_from));
+        SetPieceAt(column_from, row_from, 0);
+        last_move = move;
     }
-    return capturedPiece;
+    return captured_piece;
 }
 
-void Board::undoMove( std::string move, char capturedPiece ) {
+void Board::UndoMove( std::string move, char captured_piece ) {
     if ( move.size() != 4 ) return;
-    int columnFrom, rowFrom, columnTo, rowTo;
-    columnFrom = this->columnToInt( move.at(2) );
-    rowFrom = this->rowToInt( move.at(3) );
-    columnTo = this->columnToInt( move.at(0) );
-    rowTo = this->rowToInt( move.at(1) );
+    int column_from, row_from, column_to, row_to;
+    column_from = ColumnToInt( move.at(2) );
+    row_from = RowToInt( move.at(3) );
+    column_to = ColumnToInt( move.at(0) );
+    row_to = RowToInt( move.at(1) );
     // Update board and check if valid pos to avoid segmentation error
-    if ( this->isFree(columnTo, rowTo) )
+    if ( IsFree(column_to, row_to) )
     {
-        this->setPieceAt(columnTo, rowTo, this->getPieceAt(columnFrom, rowFrom));
-        this->setPieceAt(columnFrom, rowFrom, capturedPiece);
+        SetPieceAt(column_to, row_to, GetPieceAt(column_from, row_from));
+        SetPieceAt(column_from, row_from, captured_piece);
     }
 }
 
-void Board::printBoard() {
+void Board::PrintBoard() {
     for ( int row = 0; row < Board::HEIGHT; row++ ) {
         for ( int column = 0; column < Board::WIDTH; column++ ) {
-            int piece = (int)this->getPieceAt(column ,row);
+            int piece = (int)GetPieceAt(column ,row);
             std::string tmp = piece < 0 ? "|" : "| ";
-            std::cout << tmp << (int)this->getPieceAt(column ,row) << " ";
+            std::cout << tmp << (int)GetPieceAt(column ,row) << " ";
         }
         std::cout << "|" << std::endl;
     }
 }
 
-void Board::resetBoard() {
-    this->currentBoard[0] = { 4, 2, 3, 5, 6, 3, 2, 4 };
-    this->currentBoard[1] = { 1, 1, 1, 1, 1, 1, 1, 1 };
-    this->currentBoard[2] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    this->currentBoard[3] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    this->currentBoard[4] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    this->currentBoard[5] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    this->currentBoard[6] = { -1, -1, -1, -1, -1, -1, -1, -1 };
-    this->currentBoard[7] = { -4, -2, -3, -5, -6, -3, -2, -4 };
+void Board::ResetBoard() {
+    current_board[0] = { 4, 2, 3, 5, 6, 3, 2, 4 };
+    current_board[1] = { 1, 1, 1, 1, 1, 1, 1, 1 };
+    current_board[2] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    current_board[3] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    current_board[4] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    current_board[5] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    current_board[6] = { -1, -1, -1, -1, -1, -1, -1, -1 };
+    current_board[7] = { -4, -2, -3, -5, -6, -3, -2, -4 };
 
-    this->lastMove = "";
+    last_move = "";
 }
 
-std::string Board::positionToString( int column, int row ) {
+std::string Board::PositionToString( int column, int row ) {
     std::string res = "";
     switch ( column ) {
         case 0:
@@ -157,7 +157,7 @@ std::string Board::positionToString( int column, int row ) {
     return res;
 }
 
-int Board::columnToInt( char column ) {
+int Board::ColumnToInt( char column ) {
     int res;
     switch ( column ) {
         case 'a':
@@ -191,9 +191,9 @@ int Board::columnToInt( char column ) {
     return res;
 }
 
-int Board::rowToInt( char row ) {
+int Board::RowToInt( char row ) {
     int res = row - '1';
-    if ( this->isValidRow( res ) ) {
+    if ( IsValidRow( res ) ) {
         return res;
     }
     else {
@@ -201,26 +201,26 @@ int Board::rowToInt( char row ) {
     }
 }
 
-bool Board::isValidRow( int row ) {
+bool Board::IsValidRow( int row ) {
     return row >= 0 && row < Board::HEIGHT;
 }
 
-bool Board::isValidColumn( int column ) {
+bool Board::IsValidColumn( int column ) {
     return column >= 0 && column < Board::WIDTH;
 }
 
-bool Board::isValidPos( int column, int row ) {
-    return isValidColumn(column) && isValidRow(row);
+bool Board::IsValidPos( int column, int row ) {
+    return IsValidColumn(column) && IsValidRow(row);
 }
 
-bool Board::isCapture( int column, int row, bool isWhite ) {
-    if ( isValidPos(column, row) ) {
-        return (this->currentBoard[row][column] > 0 && !isWhite) ||
-               (this->currentBoard[row][column] < 0 && isWhite);
+bool Board::IsCapture( int column, int row, bool isWhite ) {
+    if ( IsValidPos(column, row) ) {
+        return (current_board[row][column] > 0 && !isWhite) ||
+               (current_board[row][column] < 0 && isWhite);
     }
     return false;
 }
 
-bool Board::isFree( int column, int row ) {
-    return isValidPos(column, row) && this->currentBoard[row][column] == 0;
+bool Board::IsFree( int column, int row ) {
+    return IsValidPos(column, row) && current_board[row][column] == 0;
 }

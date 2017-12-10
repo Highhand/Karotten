@@ -11,21 +11,21 @@ public:
     ~MoveEvaluator();
 
 
-    std::pair< std::string, int > findBestMove( Board& board, bool whiteTurn );
+    std::pair< std::string, int > FindBestMove( Board& board, bool white_turn );
     /*
      * alphaBeta(). Returns a pair where first item is the optimal move and the second item
      * is its score. The algorithm is a version of the minimax-algorithm where branches that leads to
      * a worse result than previously found are not evaluated (pruned away). Pseudo-code and further explanation
      * can be found on the wikipedia page: https://en.wikipedia.org/wiki/Alpha-beta_pruning
      */
-    std::pair< std::string, int > alphaBeta(int depth, int alpha, int beta, bool maximizingPlayer, Board& board);
+    std::pair< std::string, int > AlphaBeta(int depth, int alpha, int beta, bool maximizing_player, Board& board);
 
     /*
      * evaluateBoard(). Returns an int that represents the boardstate value where a
      * higher value indicates a better state for white and a lower value indicates
      * a better state for black.
      */
-    int evaluateBoard( Board& board );
+    int EvaluateBoard( Board& board );
 
     /*
      * kingIsSafe(). Controls that a move will not place your own king in check.
@@ -34,9 +34,9 @@ public:
      * then the piece can also capture the king i.e. the king is checked. Returns false
      * as soon as one instance of these kind of moves and piece combination is found.
      */
-    bool kingIsSafe( Board& board, MoveGenerator& moveGen, std::string move );
+    bool KingIsSafe( Board& board, MoveGenerator& move_generator, std::string move );
 private:
-    MoveGenerator moveGen;
+    MoveGenerator move_generator;
 };
 
 #endif

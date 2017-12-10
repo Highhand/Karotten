@@ -13,52 +13,52 @@ public:
     static const int WIDTH = 8;
     static const int HEIGHT = 8;
 
-    std::array< std::array< char, WIDTH >, HEIGHT > getCurrentBoard();
+    std::array< std::array< char, WIDTH >, HEIGHT > GetCurrentBoard();
     /*
-     * getPieceAt(). Returns piece at given position. If invalid position
+     * GetPieceAt(). Returns piece at given position. If invalid position
      * return 0.
      */
-    char getPieceAt( std::string );
-    char getPieceAt( int column, int row );
+    char GetPieceAt( std::string );
+    char GetPieceAt( int column, int row );
 
-    void setPieceAt( std::string, char piece );
-    void setPieceAt( int column, int row, char piece );
+    void SetPieceAt( std::string, char piece );
+    void SetPieceAt( int column, int row, char piece );
 
-    std::string getLastMove();
+    std::string GetLastMove();
     /*
-     * makeMove() Updates current board based on input and returns captured piece
+     * MakeMove() Updates current board based on input and returns captured piece
      */
-    char makeMove( std::string move );
+    char MakeMove( std::string move );
     /*
-     * undoMove() Updates current board based on input
+     * UndoMove() Updates current board based on input
      */
-    void undoMove( std::string move, char capturedPiece );
+    void UndoMove( std::string move, char captured_piece );
     /*
-     * resetBoard() Resets current board
+     * PrintBoard()
      */
-    void printBoard();
+    void PrintBoard();
     /*
-     * resetBoard() Resets current board
+     * ResetBoard() ReSets current board
      */
-    void resetBoard();
+    void ResetBoard();
     /*
      * Converts a position to a string in UCI-format i.e. (3,3) -> "d4"
      */
-    std::string positionToString(int column, int row );
+    std::string PositionToString(int column, int row );
 
-    int columnToInt( char );
-    int rowToInt( char );
+    int ColumnToInt( char );
+    int RowToInt( char );
 
-    bool isValidColumn( int );
-    bool isValidRow( int );
-    bool isValidPos( int column, int row );
+    bool IsValidColumn( int );
+    bool IsValidRow( int );
+    bool IsValidPos( int column, int row );
 
-    bool isCapture( int column, int row, bool isWhite );
-    bool isFree( int column, int row );
+    bool IsCapture( int column, int row, bool isWhite );
+    bool IsFree( int column, int row );
 private:
-    std::array< std::array< char, WIDTH >, HEIGHT > currentBoard;
-    // Hold the last valid move sent to makeMove(). undoMove() does not affect this var.
-    std::string lastMove;
+    std::array< std::array< char, WIDTH >, HEIGHT > current_board;
+    // Hold the last valid move sent to MakeMove(). UndoMove() does not affect this var.
+    std::string last_move;
 };
 
 #endif

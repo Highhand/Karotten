@@ -5,120 +5,120 @@
 
 CommunicatorUCI::CommunicatorUCI() {
     // std::cout << "Created CommunicatorUCI" << std::endl;
-    this->isReady = false;
-    this->whiteTurn = true;
+    is_ready = false;
+    white_turn = true;
 }
 
 CommunicatorUCI::~CommunicatorUCI() {
     // std::cout << "Destroyed CommunicatorUCI" << std::endl;
 }
 
-void CommunicatorUCI::run() {
+void CommunicatorUCI::Run() {
     std::string tmp, keyword, args;
-    this->init();
+    Init();
     bool running = true;
     // Handle options
     while (running) {
         getline(std::cin, tmp);
-        size_t firstSpacePos = tmp.find(" ");
-        keyword = tmp.substr(0, firstSpacePos);
+        size_t firstspace_pos = tmp.find(" ");
+        keyword = tmp.substr(0, firstspace_pos);
         // Check for arguments
-        if (firstSpacePos != std::string::npos ) {
-            args = tmp.substr(firstSpacePos+1);
+        if (firstspace_pos != std::string::npos ) {
+            args = tmp.substr(firstspace_pos+1);
         }
         else {
             args = "";
         }
-        if ( keyword == "debug" ) {
-            this->debug();
+        if ( keyword == "Debug" ) {
+            Debug();
         }
         else if ( keyword == "go" ) {
-            this->go(args);
+            Go(args);
         }
         else if ( keyword == "isready" ) {
-            // this->isReady = true;
+            // is_ready = true;
             std::cout << "readyok" << std::endl;
         }
         else if ( keyword == "ucinewgame" ) {
-            this->newGame();
+            NewGame();
         }
         else if ( keyword == "ponderhit" ) {
-            this->ponderHit();
+            PonderHit();
         }
         else if ( keyword == "position" ) {
-            this->position(args);
+            Position(args);
         }
         else if ( keyword == "print" ) {
-            this->board.printBoard();
+            board.PrintBoard();
         }
         else if ( keyword == "quit" ) {
-            this->quit();
+            Quit();
             running = false;
         }
         else if ( keyword == "register" ) {
-            this->registration();
+            Registration();
         }
         else if ( keyword == "setoption" ) {
-            this->setOption();
+            SetOption();
         }
         else if ( keyword == "stop" ) {
-            this->stop();
+            Stop();
         }
     }
 }
 
-void CommunicatorUCI::debug() {}
+void CommunicatorUCI::Debug() {}
 
-void CommunicatorUCI::go( std::string args ) {
+void CommunicatorUCI::Go( std::string args ) {
     // Find optimal move
-    std::pair< std::string, int > move = this->moveEval.findBestMove(this->board, this->whiteTurn);
+    std::pair< std::string, int > move = move_evaluator.FindBestMove(board, white_turn);
     std::cout << "bestmove " << move.first << std::endl;
 }
 
-void CommunicatorUCI::init() {
+void CommunicatorUCI::Init() {
     std::cout << "id name " << CommunicatorUCI::NAME << std::endl;
     std::cout << "id author " << CommunicatorUCI::AUTHOR << std::endl;
     // Options here "option name ..."
     std::cout << "uciok" << std::endl;
 }
 
-void CommunicatorUCI::newGame() {
-    board.resetBoard();
+void CommunicatorUCI::NewGame() {
+    board.ResetBoard();
 }
 
-void CommunicatorUCI::ponderHit() {}
+void CommunicatorUCI::PonderHit() {}
 
-void CommunicatorUCI::position( std::string args ) {
+void CommunicatorUCI::Position( std::string args ) {
     std::string option, move, moves;
     // First arg
-    size_t spacePos = args.find(" ");
-    option = args.substr(0, spacePos);
-    args = args.substr(spacePos+1);
+    size_t space_pos = args.find(" ");
+    option = args.substr(0, space_pos);
+    args = args.substr(space_pos+1);
     // startpos
     if ( option == "startpos" ) {
-        this->whiteTurn = true;
-        this->board.resetBoard();
+        white_turn = true;
+        board.ResetBoard();
         // Second arg
-        spacePos = args.find(" ");
-        option = args.substr(0, spacePos);
-        moves = args.substr(spacePos+1);
+        space_pos = args.find(" ");
+        option = args.substr(0, space_pos);
+        moves = args.substr(space_pos+1);
         if ( option == "moves" ) {
             // Process movelist
-            while ( spacePos != std::string::npos ) {
-                spacePos = moves.find(" ");
-                move = moves.substr(0, spacePos);
-                this->board.makeMove(move);
-                this->whiteTurn = !this->whiteTurn;
-                moves = moves.substr(spacePos+1);
+            while ( space_pos != std::string::npos ) {
+                space_pos = moves.find(" ");
+                move = moves.substr(0, space_pos);
+                board.MakeMove(move);
+                white_turn = !white_turn;
+                moves = moves.substr(space_pos+1);
             }
         }
     }
 }
 
-void CommunicatorUCI::quit() {}
+void CommunicatorUCI::Quit() {}
 
-void CommunicatorUCI::registration() {}
+void CommunicatorUCI::Registration() {}
 
-void CommunicatorUCI::setOption() {}
+void CommunicatorUCI::SetOption() {}
 
-void CommunicatorUCI::stop() {}
+void CommunicatorUCI::Stop() {}

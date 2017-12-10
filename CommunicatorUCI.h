@@ -14,32 +14,32 @@ public:
     static constexpr char* AUTHOR = "Simon Karlsson";
     static constexpr char* NAME = "Karotten";
 
-    void run();
+    void Run();
 private:
-    void debug();
+    void Debug();
 
-    void go( std::string args );
+    void Go( std::string args );
 
-    void init();
+    void Init();
 
-    void newGame();
+    void NewGame();
 
-    void ponderHit();
+    void PonderHit();
 
-    void position( std::string args);
+    void Position( std::string args);
 
-    void quit();
+    void Quit();
 
-    void registration();
+    void Registration();
 
-    void setOption();
+    void SetOption();
 
-    void stop();
+    void Stop();
 
     Board board;
-    MoveEvaluator moveEval;
-    bool isReady; // True when gui is waiting for engine
-    bool whiteTurn;
+    MoveEvaluator move_evaluator;
+    bool is_ready; // True when gui is waiting for engine
+    bool white_turn;
 };
 
 #endif
