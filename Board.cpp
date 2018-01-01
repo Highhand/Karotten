@@ -14,33 +14,33 @@ std::array< std::array< char, Board::WIDTH >, Board::HEIGHT > Board::GetCurrentB
     return current_board;
 }
 
-char Board::GetPieceAt( std::string pos ) {
+char Board::GetPieceAt(std::string pos) {
     // A position must be of length 2
-    if ( pos.size() != 2 ) return 0;
+    if (pos.size() != 2) return 0;
 
     int column, row;
-    column = ColumnToInt( pos.at(0) );
-    row = RowToInt( pos.at(1) );
+    column = ColumnToInt(pos.at(0));
+    row = RowToInt(pos.at(1));
     // If invalid postion return 0
-    if ( !IsValidPos( column, row ) ) return 0;
+    if (!IsValidPos(column, row)) return 0;
     return current_board[row][column];
 }
 
-char Board::GetPieceAt( int column, int row ) {
-    if ( !IsValidPos( column, row ) ) return 0;
+char Board::GetPieceAt(int column, int row) {
+    if (!IsValidPos(column, row)) return 0;
     return current_board[row][column];
 }
 
-void Board::SetPieceAt( std::string pos, char piece ) {
+void Board::SetPieceAt(std::string pos, char piece) {
     // A position must be of length 2
-    if ( pos.size() != 2 ) return;
+    if (pos.size() != 2) return;
     int column, row;
-    column = ColumnToInt( pos.at(0) );
-    row = RowToInt( pos.at(1) );
+    column = ColumnToInt(pos.at(0));
+    row = RowToInt(pos.at(1));
     // Return if invalid position
-    if ( !IsValidPos( column, row ) ) return;
+    if (!IsValidPos(column, row)) return;
     // Check if valid piece
-    if ( piece >= -6 && piece <= 6 ) {
+    if (piece >= -6 && piece <= 6) {
         current_board[row][column] = piece;
     }
     else {
@@ -48,10 +48,10 @@ void Board::SetPieceAt( std::string pos, char piece ) {
     }
 }
 
-void Board::SetPieceAt( int column, int row, char piece ) {
+void Board::SetPieceAt(int column, int row, char piece) {
     // Return if invalid position
-    if ( !IsValidPos( column, row ) ) return;
-    if ( piece >= -6 && piece <= 6 ) {
+    if (!IsValidPos(column, row)) return;
+    if (piece >= -6 && piece <= 6) {
         current_board[row][column] = piece;
     }
     else {
@@ -63,17 +63,17 @@ std::string Board::GetLastMove() {
     return last_move;
 }
 
-char Board::MakeMove( std::string move ) {
-    if ( move.size() != 4 ) return 0;
+char Board::MakeMove(std::string move) {
+    if (move.size() != 4) return 0;
     int column_from, row_from, column_to, row_to;
     char captured_piece = 0;
-    column_from = ColumnToInt( move.at(0) );
-    row_from = RowToInt( move.at(1) );
-    column_to = ColumnToInt( move.at(2) );
-    row_to = RowToInt( move.at(3) );
+    column_from = ColumnToInt(move.at(0));
+    row_from = RowToInt(move.at(1));
+    column_to = ColumnToInt(move.at(2));
+    row_to = RowToInt(move.at(3));
     // Update board and check if valid pos to avoid segmentation error
-    if ( IsValidPos(column_from, row_from) && IsValidPos(column_to, row_to) &&
-         !IsFree(column_from, row_from) )
+    if (IsValidPos(column_from, row_from) && IsValidPos(column_to, row_to) &&
+         !IsFree(column_from, row_from))
     {
         captured_piece = GetPieceAt(column_to, row_to);
         SetPieceAt(column_to, row_to, GetPieceAt(column_from, row_from));
@@ -83,15 +83,15 @@ char Board::MakeMove( std::string move ) {
     return captured_piece;
 }
 
-void Board::UndoMove( std::string move, char captured_piece ) {
-    if ( move.size() != 4 ) return;
+void Board::UndoMove(std::string move, char captured_piece) {
+    if (move.size() != 4) return;
     int column_from, row_from, column_to, row_to;
-    column_from = ColumnToInt( move.at(2) );
-    row_from = RowToInt( move.at(3) );
-    column_to = ColumnToInt( move.at(0) );
-    row_to = RowToInt( move.at(1) );
+    column_from = ColumnToInt(move.at(2));
+    row_from = RowToInt(move.at(3));
+    column_to = ColumnToInt(move.at(0));
+    row_to = RowToInt(move.at(1));
     // Update board and check if valid pos to avoid segmentation error
-    if ( IsFree(column_to, row_to) )
+    if (IsFree(column_to, row_to))
     {
         SetPieceAt(column_to, row_to, GetPieceAt(column_from, row_from));
         SetPieceAt(column_from, row_from, captured_piece);
@@ -99,8 +99,8 @@ void Board::UndoMove( std::string move, char captured_piece ) {
 }
 
 void Board::PrintBoard() {
-    for ( int row = 0; row < Board::HEIGHT; row++ ) {
-        for ( int column = 0; column < Board::WIDTH; column++ ) {
+    for (int row = 0; row < Board::HEIGHT; row++) {
+        for (int column = 0; column < Board::WIDTH; column++) {
             int piece = (int)GetPieceAt(column ,row);
             std::string tmp = piece < 0 ? "|" : "| ";
             std::cout << tmp << (int)GetPieceAt(column ,row) << " ";
@@ -122,7 +122,7 @@ void Board::ResetBoard() {
     last_move = "";
 }
 
-std::string Board::PositionToString( int column, int row ) {
+std::string Board::PositionToString(int column, int row) {
     std::string res = "";
     switch (column) {
         case 0:
@@ -156,9 +156,9 @@ std::string Board::PositionToString( int column, int row ) {
     return res;
 }
 
-int Board::ColumnToInt( char column ) {
+int Board::ColumnToInt(char column) {
     int res;
-    switch ( column ) {
+    switch (column) {
         case 'a':
             res = 0;
             break;
@@ -190,9 +190,9 @@ int Board::ColumnToInt( char column ) {
     return res;
 }
 
-int Board::RowToInt( char row ) {
+int Board::RowToInt(char row) {
     int res = row - '1';
-    if ( IsValidRow( res ) ) {
+    if (IsValidRow(res)) {
         return res;
     }
     else {
@@ -200,26 +200,26 @@ int Board::RowToInt( char row ) {
     }
 }
 
-bool Board::IsValidRow( int row ) {
+bool Board::IsValidRow(int row) {
     return row >= 0 && row < Board::HEIGHT;
 }
 
-bool Board::IsValidColumn( int column ) {
+bool Board::IsValidColumn(int column) {
     return column >= 0 && column < Board::WIDTH;
 }
 
-bool Board::IsValidPos( int column, int row ) {
+bool Board::IsValidPos(int column, int row) {
     return IsValidColumn(column) && IsValidRow(row);
 }
 
-bool Board::IsCapture( int column, int row, bool isWhite ) {
-    if ( IsValidPos(column, row) ) {
+bool Board::IsCapture(int column, int row, bool isWhite) {
+    if (IsValidPos(column, row)) {
         return (current_board[row][column] > 0 && !isWhite) ||
                (current_board[row][column] < 0 && isWhite);
     }
     return false;
 }
 
-bool Board::IsFree( int column, int row ) {
+bool Board::IsFree(int column, int row) {
     return IsValidPos(column, row) && current_board[row][column] == 0;
 }

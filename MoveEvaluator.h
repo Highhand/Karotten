@@ -11,7 +11,7 @@ public:
     ~MoveEvaluator();
 
 
-    std::pair< std::string, int > FindBestMove( Board& board, bool white_turn );
+    std::pair< std::string, int > FindBestMove(Board& board, bool white_turn);
     /*
      * alphaBeta(). Returns a pair where first item is the optimal move and the second item
      * is its score. The algorithm is a version of the minimax-algorithm where branches that leads to
@@ -25,7 +25,7 @@ public:
      * higher value indicates a better state for white and a lower value indicates
      * a better state for black.
      */
-    int EvaluateBoard( Board& board );
+    int EvaluateBoard(Board& board);
 
 private:
     MoveGenerator move_generator;

@@ -23,45 +23,45 @@ void CommunicatorUCI::Run() {
         size_t firstspace_pos = tmp.find(" ");
         keyword = tmp.substr(0, firstspace_pos);
         // Check for arguments
-        if (firstspace_pos != std::string::npos ) {
+        if (firstspace_pos != std::string::npos) {
             args = tmp.substr(firstspace_pos+1);
         }
         else {
             args = "";
         }
-        if ( keyword == "Debug" ) {
+        if (keyword == "Debug") {
             Debug();
         }
-        else if ( keyword == "go" ) {
+        else if (keyword == "go") {
             Go();
         }
-        else if ( keyword == "isready" ) {
+        else if (keyword == "isready") {
             // is_ready = true;
             std::cout << "readyok" << std::endl;
         }
-        else if ( keyword == "ucinewgame" ) {
+        else if (keyword == "ucinewgame") {
             NewGame();
         }
-        else if ( keyword == "ponderhit" ) {
+        else if (keyword == "ponderhit") {
             PonderHit();
         }
-        else if ( keyword == "position" ) {
+        else if (keyword == "position") {
             Position(args);
         }
-        else if ( keyword == "print" ) {
+        else if (keyword == "print") {
             board.PrintBoard();
         }
-        else if ( keyword == "quit" ) {
+        else if (keyword == "quit") {
             Quit();
             running = false;
         }
-        else if ( keyword == "register" ) {
+        else if (keyword == "register") {
             Registration();
         }
-        else if ( keyword == "setoption" ) {
+        else if (keyword == "setoption") {
             SetOption();
         }
-        else if ( keyword == "stop" ) {
+        else if (keyword == "stop") {
             Stop();
         }
     }
@@ -88,23 +88,23 @@ void CommunicatorUCI::NewGame() {
 
 void CommunicatorUCI::PonderHit() {}
 
-void CommunicatorUCI::Position( std::string args ) {
+void CommunicatorUCI::Position(std::string args) {
     std::string option, move, moves;
     // First arg
     size_t space_pos = args.find(" ");
     option = args.substr(0, space_pos);
     args = args.substr(space_pos+1);
     // startpos
-    if ( option == "startpos" ) {
+    if (option == "startpos") {
         white_turn = true;
         board.ResetBoard();
         // Second arg
         space_pos = args.find(" ");
         option = args.substr(0, space_pos);
         moves = args.substr(space_pos+1);
-        if ( option == "moves" ) {
+        if (option == "moves") {
             // Process movelist
-            while ( space_pos != std::string::npos ) {
+            while (space_pos != std::string::npos) {
                 space_pos = moves.find(" ");
                 move = moves.substr(0, space_pos);
                 board.MakeMove(move);

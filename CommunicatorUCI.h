@@ -26,7 +26,7 @@ private:
 
     void PonderHit();
 
-    void Position( std::string args);
+    void Position(std::string args);
 
     void Quit();
 
