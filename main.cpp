@@ -2,30 +2,19 @@
 #include <string>
 #include "CommunicatorUCI.h"
 
-int main( int argc, char* args[] )
+int main()
 {
-  bool perft_debug = false;
-  int perft_depth;
-
-  for (int i = 0; i < argc; i++) {
-    std::string arg = args[i];
-    if (arg == "perft") {
-      perft_debug = true;
-    }
-  }
-
-  if (perft_debug) {
-    MoveGenerator move_generator = MoveGenerator();
-    Board board = Board();
-    int perft_depth;
-    std::cout << "Depth ";
-    std::cin >> perft_depth;
-    move_generator.Perft(perft_depth, board);
-
-  }  else {
+  while (true) {
     std::string tmp;
     getline(std::cin, tmp);
-    if ( tmp == "uci" ) {
+    if (tmp == "perft") {
+      MoveGenerator move_generator = MoveGenerator();
+      Board board = Board();
+      int perft_depth;
+      std::cout << "depth ";
+      std::cin >> perft_depth;
+      std::cout << move_generator.Perft(perft_depth, board, true) << std::endl;
+    } else if (tmp == "uci" ) {
       CommunicatorUCI uci_communicator = CommunicatorUCI();
       uci_communicator.Run();
     }

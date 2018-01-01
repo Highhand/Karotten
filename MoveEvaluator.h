@@ -27,14 +27,6 @@ public:
      */
     int EvaluateBoard( Board& board );
 
-    /*
-     * kingIsSafe(). Controls that a move will not place your own king in check.
-     * Generetes moves for all pieces from the kings position and then checks if the
-     * king can capture a piece using that piece's moves. If the king can capture the piece
-     * then the piece can also capture the king i.e. the king is checked. Returns false
-     * as soon as one instance of these kind of moves and piece combination is found.
-     */
-    bool KingIsSafe( Board& board, MoveGenerator& move_generator, std::string move );
 private:
     MoveGenerator move_generator;
 };

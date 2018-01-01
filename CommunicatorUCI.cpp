@@ -33,7 +33,7 @@ void CommunicatorUCI::Run() {
             Debug();
         }
         else if ( keyword == "go" ) {
-            Go(args);
+            Go();
         }
         else if ( keyword == "isready" ) {
             // is_ready = true;
@@ -69,7 +69,7 @@ void CommunicatorUCI::Run() {
 
 void CommunicatorUCI::Debug() {}
 
-void CommunicatorUCI::Go( std::string args ) {
+void CommunicatorUCI::Go() {
     // Find optimal move
     std::pair< std::string, int > move = move_evaluator.FindBestMove(board, white_turn);
     std::cout << "bestmove " << move.first << std::endl;

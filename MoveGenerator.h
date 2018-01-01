@@ -11,7 +11,7 @@ class MoveGenerator {
     /*
      * perft(). Generates all moves to given depth
      */
-    int Perft(int depth, Board board);
+    int Perft(int depth, Board board, bool white_turn);
 
     /*
      * GenerateMoves(). Generate all possible pseudo-legal moves for provided color.
@@ -43,6 +43,13 @@ class MoveGenerator {
      */
     std::vector< std::string > GenerateKingMoves( Board& board, int column, int row, bool only_captures );
   private:
+      /*
+       * kingIsSafe(). Controls that a move will not place your own king in check.
+       * If the king can capture the piece then the piece can also capture the king
+       * i.e. the king is checked. Returns false as soon as one instance of these
+       * kind of moves and piece combination is found.
+       */
+      bool KingIsSafe(Board& board, std::string move );
 };
 
 #endif

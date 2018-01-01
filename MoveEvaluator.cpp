@@ -24,18 +24,12 @@ std::pair< std::string, int > MoveEvaluator::AlphaBeta(int depth, int alpha, int
     // Generate moves
     std::vector< std::string > moves = move_generator.GenerateMoves(board, maximizing_player);
     // TODO: Sort moves
-    // Remove moves that places own king in check
-    for ( int i = 0; i < moves.size(); i++ ) {
-        if ( !KingIsSafe(board, move_generator, moves.at(i)) ) {
-            moves.erase(moves.begin()+i);
-            i--;
-        }
-    }
+
     std::pair<std::string, int> best_move;
     if ( maximizing_player ) {
         best_move.first = "";
         best_move.second = std::numeric_limits<int>::min();
-        for ( int i = 0; i < moves.size(); i++ ) {
+        for ( size_t i = 0; i < moves.size(); i++ ) {
             // Make move
             int captured_piece = board.MakeMove(moves.at(i));
             // Call AlphaBeta with new child-boardstate
@@ -59,7 +53,7 @@ std::pair< std::string, int > MoveEvaluator::AlphaBeta(int depth, int alpha, int
     } else {
         best_move.first = "";
         best_move.second = std::numeric_limits<int>::max();
-        for ( int i = 0; i < moves.size(); i++ ) {
+        for ( size_t i = 0; i < moves.size(); i++ ) {
             // Make move
             int captured_piece = board.MakeMove(moves.at(i));
             // Call AlphaBeta with new child-boardstate
@@ -91,71 +85,4 @@ int MoveEvaluator::EvaluateBoard( Board& board ) {
         }
     }
     return score;
-}
-
-bool MoveEvaluator::KingIsSafe( Board& board, MoveGenerator& move_generator, std::string move ) {
-    std::vector< std::string > moves;
-    bool is_white = board.GetPieceAt(move.substr(0,2)) > 0;
-    int color_modifier = is_white ? 1 : -1;
-    int king_column, king_row;
-    // make move
-    int old_piece = board.MakeMove( move );
-    // Find the Kings position
-    for ( int row = 0; row < Board::HEIGHT; row++ ) {
-        for ( int column = 0; column < Board::WIDTH; column++ ) {
-            if ( board.GetPieceAt(column, row) == 6*color_modifier ) {
-                king_column = column;
-                king_row = row;
-            }
-        }
-    }
-    // Generate Knight moves
-    moves = move_generator.GenerateKnightMoves( board, king_column, king_row, true);
-    for ( int i = 0; i < moves.size(); i++ ) {
-        // Check if opponents Knight can be captured from Kings position
-        if (board.GetPieceAt(moves[i].substr(2,2)) == 2*color_modifier*-1 ) {
-            board.UndoMove( move, old_piece );
-            return false;
-        }
-    }
-    // Generate Rook moves
-    moves = move_generator.GenerateRookMoves( board, king_column, king_row, true);
-    for ( int i = 0; i < moves.size(); i++ ) {
-        // Check if opponents Rook or Queen can be captured from Kings position
-        int piece =board.GetPieceAt(moves[i].substr(2,2));
-        if ( piece == 4*color_modifier*-1 || piece == 5*color_modifier*-1 ) {
-            board.UndoMove( move, old_piece );
-            return false;
-        }
-    }
-    // Generate Bishop moves
-    moves = move_generator.GenerateBishopMoves( board, king_column, king_row, true);
-    for ( int i = 0; i < moves.size(); i++ ) {
-        // Check if opponents Bishop or Queen can be captured from Kings position
-        int piece = board.GetPieceAt(moves[i].substr(2,2));
-        if ( piece == 3*color_modifier*-1 || piece == 5*color_modifier*-1 ) {
-            board.UndoMove( move, old_piece );
-            return false;
-        }
-    }
-    // Generate Pawn moves
-    moves = move_generator.GeneratePawnMoves( board, king_column, king_row, true);
-    for ( int i = 0; i < moves.size(); i++ ) {
-        // Check if opponents Pawn can be captured from Kings position
-        if (board.GetPieceAt(moves[i].substr(2,2)) == 1*color_modifier*-1 ) {
-            board.UndoMove( move, old_piece );
-            return false;
-        }
-    }
-    // Generate King moves
-    moves = move_generator.GenerateKingMoves( board, king_column, king_row, true);
-    for ( int i = 0; i < moves.size(); i++ ) {
-        // Check if opponents King can be captured from Kings position
-        if (board.GetPieceAt(moves[i].substr(2,2)) == 6*color_modifier*-1 ) {
-            board.UndoMove( move, old_piece );
-            return false;
-        }
-    }
-    board.UndoMove( move, old_piece );
-    return true;
 }

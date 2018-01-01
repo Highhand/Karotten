@@ -124,7 +124,7 @@ void Board::ResetBoard() {
 
 std::string Board::PositionToString( int column, int row ) {
     std::string res = "";
-    switch ( column ) {
+    switch (column) {
         case 0:
             res += "a";
             break;
@@ -150,7 +150,6 @@ std::string Board::PositionToString( int column, int row ) {
             res += "h";
             break;
         default:
-            res += "x";
             break;
     }
     res += std::to_string(row+1);

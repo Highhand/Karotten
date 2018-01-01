@@ -11,14 +11,14 @@ public:
     CommunicatorUCI();
     ~CommunicatorUCI();
 
-    static constexpr char* AUTHOR = "Simon Karlsson";
-    static constexpr char* NAME = "Karotten";
+    const std::string AUTHOR = "Simon Karlsson";
+    const std::string NAME = "Karotten";
 
     void Run();
 private:
     void Debug();
 
-    void Go( std::string args );
+    void Go();
 
     void Init();
 
