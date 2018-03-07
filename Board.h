@@ -8,7 +8,6 @@
 class Board {
 public:
     Board();
-    ~Board();
 
     static const int WIDTH = 8;
     static const int HEIGHT = 8;
@@ -58,7 +57,7 @@ public:
 private:
     std::array< std::array< char, WIDTH >, HEIGHT > current_board;
     // Hold the last valid move sent to MakeMove(). UndoMove() does not affect this var.
-    std::string last_move;
+    std::string last_move{""};
 };
 
 #endif

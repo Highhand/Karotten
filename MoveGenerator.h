@@ -5,8 +5,6 @@
 
 class MoveGenerator {
   public:
-    MoveGenerator();
-    ~MoveGenerator();
 
     /*
      * perft(). Generates all moves to given depth

@@ -1,13 +1,5 @@
-#include "MoveGenerator.h"
 #include <iostream>
-
-MoveGenerator::MoveGenerator() {
-    // std::cout << "Created MoveGenerator" << std::endl;
-}
-
-MoveGenerator::~MoveGenerator() {
-    // std::cout << "Destroyed MoveGenerator" << std::endl;
-}
+#include "MoveGenerator.h"
 
 int MoveGenerator::Perft(int depth, Board board, bool white_turn) {
   std::vector<std::string> moves;
@@ -23,7 +15,7 @@ int MoveGenerator::Perft(int depth, Board board, bool white_turn) {
     total_nodes += nodes;
     board.UndoMove(moves[i], captured_piece);
     if (depth == 2) {
-        std::cout << moves[i] << ": " << nodes << std::endl;
+        // std::cout << moves[i] << ": " << nodes << std::endl;
     }
   }
   return total_nodes;
@@ -98,11 +90,49 @@ std::vector< std::string> MoveGenerator::GeneratePawnMoves(Board& board, int col
     if (board.IsCapture(next_column, next_row , is_white)) {
         moves.push_back(move);
     }
+    // En passant left
+    // Diag right is free && last move was a pawn that moved to row in column +-1
+    // and that move was a two step forward
+    if (board.IsFree(next_column, next_row)) {
+      auto neighbor_piece = board.GetPieceAt(next_column, row);
+      auto last_move = board.GetLastMove();
+      if (last_move != "") {
+        auto row_from = board.RowToInt(last_move.at(1));
+        auto column_to = board.ColumnToInt(last_move.at(2));
+        auto row_to = board.RowToInt(last_move.at(3));
+        if (column_to == next_column && row_to == row && std::abs(row_from-row_to) == 2) {
+          if (is_white && neighbor_piece == -1) {
+            moves.push_back(move);
+          } else if (!is_white && neighbor_piece == 1) {
+            moves.push_back(move);
+          }
+        }
+      }
+    }
     // Check capture right
     next_column = column +1;
     move = cur_pos + board.PositionToString(next_column,next_row);
     if (board.IsCapture(next_column, next_row, is_white)) {
         moves.push_back(move);
+    }
+    // En passant right
+    // Diag right is free && last move was a pawn that moved to row in column +-1
+    // and that move was a two step forward
+    if (board.IsFree(next_column, next_row)) {
+      auto neighbor_piece = board.GetPieceAt(next_column, row);
+      auto last_move = board.GetLastMove();
+      if (last_move != "") {
+        auto row_from = board.RowToInt(last_move.at(1));
+        auto column_to = board.ColumnToInt(last_move.at(2));
+        auto row_to = board.RowToInt(last_move.at(3));
+        if (column_to == next_column && row_to == row && std::abs(row_from-row_to) == 2) {
+          if (is_white && neighbor_piece == -1) {
+            moves.push_back(move);
+          } else if (!is_white && neighbor_piece == 1) {
+            moves.push_back(move);
+          }
+        }
+      }
     }
     // Check if free
     next_column = column;

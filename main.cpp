@@ -17,7 +17,7 @@ int main()
     } else if (tmp == "uci" ) {
       CommunicatorUCI uci_communicator = CommunicatorUCI();
       uci_communicator.Run();
-    }
+    } else if (tmp == "q") break;
   }
 
 	return 0;

@@ -1,18 +1,6 @@
 #include "CommunicatorUCI.h"
 #include <iostream>
 
-#include <stdexcept>
-
-CommunicatorUCI::CommunicatorUCI() {
-    // std::cout << "Created CommunicatorUCI" << std::endl;
-    is_ready = false;
-    white_turn = true;
-}
-
-CommunicatorUCI::~CommunicatorUCI() {
-    // std::cout << "Destroyed CommunicatorUCI" << std::endl;
-}
-
 void CommunicatorUCI::Run() {
     std::string tmp, keyword, args;
     Init();
@@ -49,7 +37,7 @@ void CommunicatorUCI::Run() {
             Position(args);
         }
         else if (keyword == "print") {
-            board.PrintBoard();
+            Print(args);
         }
         else if (keyword == "quit") {
             Quit();
@@ -112,6 +100,106 @@ void CommunicatorUCI::Position(std::string args) {
                 moves = moves.substr(space_pos+1);
             }
         }
+    } else if (option == "fen") {
+      // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+      // Pieces
+      space_pos = args.find(" ");
+      auto boards_setup = args.substr(0,space_pos);
+      args.substr(space_pos+1);
+      int row{7},column{0};
+      for (auto& piece : boards_setup) {
+        if (row == 0 && column > 7) break;
+        switch (piece) {
+          case '/':
+            row--;
+            column = 0;
+            break;
+          case 'p':
+            board.SetPieceAt(column,row,-1);
+            column++;
+            break;
+          case 'n':
+            board.SetPieceAt(column,row,-2);
+            column++;
+            break;
+          case 'b':
+            board.SetPieceAt(column,row,-3);
+            column++;
+            break;
+          case 'r':
+            board.SetPieceAt(column,row,-4);
+            column++;
+            break;
+          case 'q':
+            board.SetPieceAt(column,row,-5);
+            column++;
+            break;
+          case 'k':
+            board.SetPieceAt(column,row,-6);
+            column++;
+            break;
+          case 'P':
+            board.SetPieceAt(column,row,1);
+            column++;
+            break;
+          case 'N':
+            board.SetPieceAt(column,row,2);
+            column++;
+            break;
+          case 'B':
+            board.SetPieceAt(column,row,3);
+            column++;
+            break;
+          case 'R':
+            board.SetPieceAt(column,row,4);
+            column++;
+            break;
+          case 'Q':
+            board.SetPieceAt(column,row,5);
+            column++;
+            break;
+          case 'K':
+            board.SetPieceAt(column,row,6);
+            column++;
+            break;
+          default:
+            auto empty_cols = std::stoi(std::string{piece});
+            for (int i = 0; i < empty_cols; ++i) {
+              board.SetPieceAt(column,row,0);
+              column++;
+            }
+            break;
+        }
+      }
+      // Active color
+      space_pos = args.find(" ");
+      auto active_color = args.substr(0,space_pos);
+      args.substr(space_pos+1);
+      active_color == "w" ? white_turn = true : white_turn = false;
+      // Castling available
+      // En passant target
+      // Halfmove clock for fifty move rule
+      // Fullmove nr start at 1
+    }
+    // TODO: FEN strings
+}
+
+void CommunicatorUCI::Print(std::string args) {
+    std::string option;
+    size_t space_pos = args.find(" ");
+    option = args.substr(0, space_pos);
+    args = args.substr(space_pos+1);
+    if (option == "board") {
+      board.PrintBoard();
+    } else if (option == "moves") {
+      auto moves = move_generator.GenerateMoves(board,white_turn);
+      std::cout << moves.size() << ": ";
+      for (auto& move : moves) {
+        std::cout << move << " ";
+      }
+      std::cout << std::endl;
+    } else if (option == "last") {
+      std::cout << board.GetLastMove() << std::endl;
     }
 }
 

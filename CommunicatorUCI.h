@@ -1,16 +1,13 @@
 #ifndef COMMUNICATOR_UCI_H
 #define COMMUNICATOR_UCI_H
 
-#include <string>
 #include "Board.h"
 #include "MoveEvaluator.h"
 #include "MoveGenerator.h"
 
 class CommunicatorUCI {
+  // http://wbec-ridderkerk.nl/html/UCIProtocol.html
 public:
-    CommunicatorUCI();
-    ~CommunicatorUCI();
-
     const std::string AUTHOR = "Simon Karlsson";
     const std::string NAME = "Karotten";
 
@@ -28,6 +25,8 @@ private:
 
     void Position(std::string args);
 
+    void Print(std::string args);
+
     void Quit();
 
     void Registration();
@@ -38,8 +37,9 @@ private:
 
     Board board;
     MoveEvaluator move_evaluator;
-    bool is_ready; // True when gui is waiting for engine
-    bool white_turn;
+    MoveGenerator move_generator;
+    bool is_ready{false}; // True when gui is waiting for engine
+    bool white_turn{true};
 };
 
 #endif

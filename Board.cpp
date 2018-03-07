@@ -3,11 +3,6 @@
 
 Board::Board() {
     ResetBoard();
-    // std::cout << "Created Board" << std::endl;
-}
-
-Board::~Board() {
-    // std::cout << "Destroyed Board" << std::endl;
 }
 
 std::array< std::array< char, Board::WIDTH >, Board::HEIGHT > Board::GetCurrentBoard() {

@@ -1,16 +1,8 @@
-#include "MoveEvaluator.h"
 #include <algorithm> // min, max
 #include <iostream>
 #include <limits> // <int> max, <int> min
 #include <vector>
-
-MoveEvaluator::MoveEvaluator() {
-    // std::cout << "Created MoveEvaluator" << std::endl;
-}
-
-MoveEvaluator::~MoveEvaluator() {
-    // std::cout << "Destroyed MoveEvaluator" << std::endl;
-}
+#include "MoveEvaluator.h"
 
 std::pair< std::string, int > MoveEvaluator::FindBestMove(Board& board, bool white_turn) {
     return AlphaBeta(4, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), white_turn, board);
@@ -23,7 +15,7 @@ std::pair< std::string, int > MoveEvaluator::AlphaBeta(int depth, int alpha, int
     }
     // Generate moves
     std::vector< std::string > moves = move_generator.GenerateMoves(board, maximizing_player);
-    // TODO: Sort moves
+    // TODO: Sort moves for more effective pruning
 
     std::pair<std::string, int> best_move;
     if (maximizing_player) {
